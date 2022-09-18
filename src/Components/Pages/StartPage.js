@@ -4,28 +4,36 @@ import ThickButton from "../ThickButton.js";
 import HorizontalLine from "../HorizontalLine";
 import ThinButton from "../ThinButton";
 import Spacing from "../Spacing";
+import { Link } from "react-router-dom";
+import CenterScreen from "../CenterScreen";
 
 const StartPage = () => {
   return (
-    <StartPageMainContainer>
-      <StartPageHeader>Det borde inte kosta pengar att plugga</StartPageHeader>
-      <StartPageSubHeader>
-        Öva på tentauppgifter som är sorterade efter svårhetsgrad och kursdel
-        gratis
-      </StartPageSubHeader>
-      <Spacing Height={"2.6rem"} />
-      <ThickButton>Gå till kurser</ThickButton>
-      <Spacing Height={"4.125rem"} />
-      <HorizontalLine />
-      <Spacing Height={"1.8rem"} />
-      <ThinButton Width={"15.5rem"}>Logga in</ThinButton>
-      <Spacing Height={"1rem"} />
-      <ThinButton Width={"15.5rem"}>Registrera</ThinButton>
-      <Spacing Height={"1.8rem"} />
-      <HorizontalLine />
-      <Spacing Height={"4.125rem"} />
-      <ThinButton Color={Color.Green}>Mer information</ThinButton>
-    </StartPageMainContainer>
+    <CenterScreen>
+      <StartPageMainContainer>
+        <StartPageHeader>
+          Det borde inte kosta pengar att plugga
+        </StartPageHeader>
+        <StartPageSubHeader>
+          Öva på tentauppgifter som är sorterade efter svårhetsgrad och kursdel
+          gratis
+        </StartPageSubHeader>
+        <Spacing Height={"2.6rem"} />
+        <ThickButton>Gå till kurser</ThickButton>
+        <Spacing Height={"4.125rem"} />
+        <HorizontalLine />
+        <Spacing Height={"1.8rem"} />
+        <Link to="/login">
+          <ThinButton Width={"15.5rem"}>Logga in</ThinButton>
+        </Link>
+        <Spacing Height={"1rem"} />
+        <ThinButton Width={"15.5rem"}>Registrera</ThinButton>
+        <Spacing Height={"1.8rem"} />
+        <HorizontalLine />
+        <Spacing Height={"4.125rem"} />
+        <ThinButton Color={Color.Green}>Mer information</ThinButton>
+      </StartPageMainContainer>
+    </CenterScreen>
   );
 };
 
@@ -50,6 +58,7 @@ const StartPageMainContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  text-align: center;
 `;
 
 export default StartPage;

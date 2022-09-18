@@ -1,14 +1,14 @@
 import styled from "styled-components";
-import { Color } from "./Constants";
+import { Color, BorderRadius } from "./Constants";
 
 const ThinButton = styled.button`
   background-color: ${(props) => (props.Color ? props.Color : Color.Blue)};
   font-size: 1em;
   font-family: "Jost";
-  padding-top: 1.25rem;
-  padding-bottom: 1.25rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
   width: ${(props) => (props.Width ? props.Width : "18rem")};
-  border-radius: 12px;
+  border-radius: ${BorderRadius.Default};
   border: none;
   color: ${(props) => (props.TextColor ? props.TextColor : Color.White)};
 

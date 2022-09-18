@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Color } from "./Constants";
+import { Color, BorderRadius } from "./Constants";
 
 const ThickButton = styled.button`
   background-color: ${(props) => (props.Color ? props.Color : Color.Blue)};
@@ -8,7 +8,7 @@ const ThickButton = styled.button`
   padding-top: 1.875rem;
   padding-bottom: 1.875rem;
   width: ${(props) => (props.Width ? props.Width : "18rem")};
-  border-radius: 12px;
+  border-radius: ${BorderRadius.Default};
   border: none;
   color: ${(props) => (props.TextColor ? props.TextColor : Color.White)};
 

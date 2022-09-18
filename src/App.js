@@ -5,11 +5,7 @@ import StartPage from "./Components/Pages/StartPage";
 import CenterScreen from "./Components/CenterScreen";
 
 function App() {
-  return (
-    <CenterScreen>
-      <StartPage />
-    </CenterScreen>
-  );
+  return <StartPage />;
 }
 
 export default App;

@@ -7,3 +7,7 @@ export const Color = {
   Red: "#ea6e48",
   Green: "#818747",
 };
+
+export const BorderRadius = {
+  Default: "12px",
+};
