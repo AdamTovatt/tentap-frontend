@@ -1,15 +1,14 @@
 import logo from "./logo.svg";
-import Button from "./Components/Button.js";
 import "./App.css";
+import { Color } from "./Components/Constants";
+import StartPage from "./Components/Pages/StartPage";
+import CenterScreen from "./Components/CenterScreen";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>Welcome to tentap</p>
-        <Button>Gå till kurser</Button>
-      </header>
-    </div>
+    <CenterScreen>
+      <StartPage />
+    </CenterScreen>
   );
 }
 
