@@ -6,6 +6,7 @@ export const Color = {
   Yellow: "#f7b33d",
   Red: "#ea6e48",
   Green: "#818747",
+  FadedBlue: "rgba(85, 100, 160, 0.7)",
 };
 
 export const BorderRadius = {
