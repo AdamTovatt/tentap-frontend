@@ -50,7 +50,7 @@ const StartPage = () => {
           />
           {isLoggedIn ? (
             <>
-              <Link to="/login">
+              <Link to="/me">
                 <ThinButton Color={Color.FadedBlue} Width={"15.5rem"}>
                   Min sida
                 </ThinButton>
