@@ -1,11 +1,22 @@
 import styled from "styled-components";
 import { BorderRadius, Color } from "./Constants";
 
-const TextField = ({ title, placeHolder, type }) => {
+const TextField = ({ title, placeHolder, type, setState, onSumbit }) => {
   return (
     <TextFieldContainer>
       <TextAreaTitle>{title}</TextAreaTitle>
-      <CustomTextArea type={type} placeholder={placeHolder} />
+      <CustomTextArea
+        onKeyDown={(event) => {
+          if (event.key === "Enter") {
+            if (onSumbit) onSumbit();
+          }
+        }}
+        onChange={(event) => {
+          setState(event.target.value);
+        }}
+        type={type}
+        placeholder={placeHolder}
+      />
     </TextFieldContainer>
   );
 };

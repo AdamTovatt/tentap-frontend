@@ -46,9 +46,11 @@ const StartPage = () => {
             </ThinButton>
           </Link>
           <Spacing Height={"1rem"} />
-          <ThinButton Color={Color.FadedBlue} Width={"15.5rem"}>
-            Registrera
-          </ThinButton>
+          <Link to="/register">
+            <ThinButton Color={Color.FadedBlue} Width={"15.5rem"}>
+              Registrera
+            </ThinButton>
+          </Link>
           <AdvancedSpacing
             MinHeight={0.5}
             MaxHeight={1.8}

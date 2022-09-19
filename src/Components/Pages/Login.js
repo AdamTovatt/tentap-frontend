@@ -4,14 +4,26 @@ import ThickButton from "../ThickButton.js";
 import HorizontalLine from "../HorizontalLine";
 import ThinButton from "../ThinButton";
 import Spacing from "../Spacing";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CenterScreen from "../CenterScreen";
 import TextField from "../TextField";
 import AdvancedSpacing from "../AdvancedSpacing";
 import { useEffect } from "react";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { Login } from "../../Api";
+import { useRef } from "react";
+import React, { useState } from "react";
+import Cookies from "universal-cookie";
 
 const LoginPage = () => {
+  const emailRef = useRef(null);
+  const passwordRef = useRef(null);
+  const [email, setEmail] = useState(null);
+  const [password, setPassword] = useState(null);
+  const navigate = useNavigate();
+
+  const cookies = new Cookies();
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -24,12 +36,20 @@ const LoginPage = () => {
             Skriv in dina användaruppgifter nedanför för att logga in
           </LoginPageHeader>
           <AdvancedSpacing MinHeight={1} MaxHeight={2.6} ScreenPercentage={4} />
-          <TextField title={"Email:"} placeHolder={"Din emailaddress..."} />
+          <TextField
+            setState={setEmail}
+            title={"Email:"}
+            placeHolder={"Din emailaddress..."}
+          />
           <AdvancedSpacing MinHeight={0.8} MaxHeight={1} ScreenPercentage={2} />
           <TextField
+            setState={setPassword}
             title={"Lösenord:"}
             placeHolder={"Ditt lösenord..."}
             type={"password"}
+            onSumbit={async () => {
+              await FunctionHandleLogin(email, password, cookies, navigate);
+            }}
           />
           <AdvancedSpacing
             MinHeight={1}
@@ -37,7 +57,14 @@ const LoginPage = () => {
             ScreenPercentage={3}
           />
           <Link to="/login">
-            <ThinButton Color={Color.Green}>Logga in</ThinButton>
+            <ThinButton
+              Color={Color.Green}
+              onClick={async () => {
+                await FunctionHandleLogin(email, password, cookies, navigate);
+              }}
+            >
+              Logga in
+            </ThinButton>
           </Link>
           <Spacing Height={"1.2rem"} />
           <Link to="/register" style={{ textDecorationColor: Color.White }}>
@@ -68,6 +95,32 @@ const LoginPage = () => {
     </CenterScreen>
   );
 };
+
+async function FunctionHandleLogin(email, password, cookies, navigate) {
+  if (!ValidInput(email, password)) return;
+
+  let response = await Login(email, password);
+
+  if (response.status === 401) {
+    alert("Felaktig email och/eller lösenord");
+  } else if (response.status !== 200) {
+    alert("Okänt fel");
+  } else {
+    cookies.set("userInfo", await response.json(), {
+      path: "/",
+      sameSite: "none",
+      secure: true,
+    });
+    navigate("/");
+  }
+}
+
+function ValidInput(email, password) {
+  if (!email) return false;
+  if (!password) return false;
+
+  return true;
+}
 
 const LoginPageHeader = ({ children }) => {
   const matches = useMediaQuery("(min-height:640px)");
