@@ -7,8 +7,16 @@ import Spacing from "../Spacing";
 import { Link } from "react-router-dom";
 import CenterScreen from "../CenterScreen";
 import AdvancedSpacing from "../AdvancedSpacing";
+import Cookies from "universal-cookie";
 
 const StartPage = () => {
+  const cookies = new Cookies();
+  const userInfo = cookies.get("userInfo");
+  const isLoggedIn = userInfo !== undefined && userInfo != null;
+
+  console.log(userInfo == null);
+  console.log("Logged in: " + isLoggedIn);
+
   return (
     <CenterScreen>
       <StartPageMainContainer>
@@ -40,17 +48,41 @@ const StartPage = () => {
             MaxHeight={1.8}
             ScreenPercentage={2}
           />
-          <Link to="/login">
-            <ThinButton Color={Color.FadedBlue} Width={"15.5rem"}>
-              Logga in
-            </ThinButton>
-          </Link>
-          <Spacing Height={"1rem"} />
-          <Link to="/register">
-            <ThinButton Color={Color.FadedBlue} Width={"15.5rem"}>
-              Registrera
-            </ThinButton>
-          </Link>
+          {isLoggedIn ? (
+            <>
+              <Link to="/login">
+                <ThinButton Color={Color.FadedBlue} Width={"15.5rem"}>
+                  Min sida
+                </ThinButton>
+              </Link>
+              <Spacing Height={"1rem"} />
+              <Link to="/">
+                <ThinButton
+                  onClick={() => {
+                    Logout(cookies);
+                  }}
+                  Color={Color.FadedBlue}
+                  Width={"15.5rem"}
+                >
+                  Logga ut
+                </ThinButton>
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link to="/login">
+                <ThinButton Color={Color.FadedBlue} Width={"15.5rem"}>
+                  Logga in
+                </ThinButton>
+              </Link>
+              <Spacing Height={"1rem"} />
+              <Link to="/register">
+                <ThinButton Color={Color.FadedBlue} Width={"15.5rem"}>
+                  Registrera
+                </ThinButton>
+              </Link>
+            </>
+          )}
           <AdvancedSpacing
             MinHeight={0.5}
             MaxHeight={1.8}
@@ -73,6 +105,15 @@ const StartPage = () => {
     </CenterScreen>
   );
 };
+
+function Logout(cookies) {
+  cookies.remove("userInfo", {
+    path: "/",
+    sameSite: "none",
+    secure: true,
+  });
+  window.location.reload();
+}
 
 const ComponentContainer = styled.div``;
 

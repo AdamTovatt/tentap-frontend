@@ -2,14 +2,24 @@ import styled from "styled-components";
 import { Color } from "../Constants";
 import ThinButton from "../ThinButton";
 import Spacing from "../Spacing";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CenterScreen from "../CenterScreen";
 import TextField from "../TextField";
 import AdvancedSpacing from "../AdvancedSpacing";
 import { useEffect } from "react";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import React, { useState } from "react";
+import { Register } from "../../Api";
+import Cookies from "universal-cookie";
 
 const RegisterPage = () => {
+  const [email, setEmail] = useState(null);
+  const [password, setPassword] = useState(null);
+  const [username, setUsername] = useState(null);
+
+  const navigate = useNavigate();
+  const cookies = new Cookies();
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -23,16 +33,49 @@ const RegisterPage = () => {
           </RegisterPageHeader>
           <AdvancedSpacing MinHeight={1} MaxHeight={2.6} ScreenPercentage={4} />
           <TextField
+            setState={setUsername}
             title={"Användarnamn:"}
             placeHolder={"Kan ändras senare..."}
+            onSumbit={async () => {
+              await HandleRegister(
+                email,
+                password,
+                username,
+                cookies,
+                navigate
+              );
+            }}
           />
           <AdvancedSpacing MinHeight={0.8} MaxHeight={1} ScreenPercentage={2} />
-          <TextField title={"Email:"} placeHolder={"Din emailaddress..."} />
+          <TextField
+            setState={setEmail}
+            title={"Email:"}
+            placeHolder={"Din emailaddress..."}
+            onSumbit={async () => {
+              await HandleRegister(
+                email,
+                password,
+                username,
+                cookies,
+                navigate
+              );
+            }}
+          />
           <AdvancedSpacing MinHeight={0.8} MaxHeight={1} ScreenPercentage={2} />
           <TextField
+            setState={setPassword}
             title={"Lösenord:"}
             placeHolder={"Ditt lösenord..."}
             type={"password"}
+            onSumbit={async () => {
+              await HandleRegister(
+                email,
+                password,
+                username,
+                cookies,
+                navigate
+              );
+            }}
           />
           <AdvancedSpacing
             MinHeight={1}
@@ -68,6 +111,32 @@ const RegisterPage = () => {
     </CenterScreen>
   );
 };
+
+async function HandleRegister(email, password, username, cookies, navigate) {
+  if (!ValidInput(email, password)) return;
+
+  let response = await Register(email, password, username);
+
+  if (response.status === 400) {
+    alert("Ogiltiga användaruppgifter");
+  } else if (response.status !== 200) {
+    alert("Okänt fel");
+  } else {
+    cookies.set("userInfo", await response.json(), {
+      path: "/",
+      sameSite: "none",
+      secure: true,
+    });
+    navigate("/");
+  }
+}
+
+function ValidInput(email, password) {
+  if (!email) return false;
+  if (!password) return false;
+
+  return true;
+}
 
 const RegisterPageHeader = ({ children }) => {
   const matches = useMediaQuery("(min-height:700px)");

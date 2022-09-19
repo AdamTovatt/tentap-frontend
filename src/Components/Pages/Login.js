@@ -1,7 +1,5 @@
 import styled from "styled-components";
 import { Color } from "../Constants";
-import ThickButton from "../ThickButton.js";
-import HorizontalLine from "../HorizontalLine";
 import ThinButton from "../ThinButton";
 import Spacing from "../Spacing";
 import { Link, useNavigate } from "react-router-dom";
@@ -11,17 +9,14 @@ import AdvancedSpacing from "../AdvancedSpacing";
 import { useEffect } from "react";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { Login } from "../../Api";
-import { useRef } from "react";
 import React, { useState } from "react";
 import Cookies from "universal-cookie";
 
 const LoginPage = () => {
-  const emailRef = useRef(null);
-  const passwordRef = useRef(null);
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
-  const navigate = useNavigate();
 
+  const navigate = useNavigate();
   const cookies = new Cookies();
 
   useEffect(() => {
@@ -40,6 +35,9 @@ const LoginPage = () => {
             setState={setEmail}
             title={"Email:"}
             placeHolder={"Din emailaddress..."}
+            onSumbit={async () => {
+              await HandleLogin(email, password, cookies, navigate);
+            }}
           />
           <AdvancedSpacing MinHeight={0.8} MaxHeight={1} ScreenPercentage={2} />
           <TextField
@@ -48,7 +46,7 @@ const LoginPage = () => {
             placeHolder={"Ditt lösenord..."}
             type={"password"}
             onSumbit={async () => {
-              await FunctionHandleLogin(email, password, cookies, navigate);
+              await HandleLogin(email, password, cookies, navigate);
             }}
           />
           <AdvancedSpacing
@@ -60,7 +58,7 @@ const LoginPage = () => {
             <ThinButton
               Color={Color.Green}
               onClick={async () => {
-                await FunctionHandleLogin(email, password, cookies, navigate);
+                await HandleLogin(email, password, cookies, navigate);
               }}
             >
               Logga in
@@ -96,7 +94,7 @@ const LoginPage = () => {
   );
 };
 
-async function FunctionHandleLogin(email, password, cookies, navigate) {
+async function HandleLogin(email, password, cookies, navigate) {
   if (!ValidInput(email, password)) return;
 
   let response = await Login(email, password);

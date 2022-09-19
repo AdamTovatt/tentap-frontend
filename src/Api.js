@@ -6,6 +6,14 @@ export async function Login(email, password) {
   });
 }
 
+export async function Register(email, password, username) {
+  return await fetch(GetBasePath() + "user/create", {
+    method: "POST",
+    body: JSON.stringify({ name: username, email, password }),
+    headers: { "Content-Type": "application/json" },
+  });
+}
+
 export function GetAllCourses() {
   fetch(GetBasePath() + "course/getall")
     .then((response) => response.json())

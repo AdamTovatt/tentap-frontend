@@ -12,7 +12,7 @@ const TextField = ({ title, placeHolder, type, setState, onSumbit }) => {
           }
         }}
         onChange={(event) => {
-          setState(event.target.value);
+          if (setState) setState(event.target.value);
         }}
         type={type}
         placeholder={placeHolder}
