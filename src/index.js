@@ -8,6 +8,7 @@ import StartPage from "./Components/Pages/StartPage";
 import LoginPage from "./Components/Pages/Login";
 import RegisterPage from "./Components/Pages/Register";
 import UserProfilePage from "./Components/Pages/UserProfilePage";
+import AdminPage from "./Components/Pages/AdminPage";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -17,6 +18,7 @@ root.render(
       <Route path="/login" element={<LoginPage />}></Route>
       <Route path="/register" element={<RegisterPage />}></Route>
       <Route path="/me" element={<UserProfilePage />}></Route>
+      <Route path="/admin" element={<AdminPage />}></Route>
     </Routes>
   </BrowserRouter>
 );

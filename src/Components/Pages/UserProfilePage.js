@@ -64,8 +64,7 @@ const UserProfilePage = () => {
         <ComponentContainer>
           {userRole > 0 ? (
             <>
-              {" "}
-              <Link to={"/"}>
+              <Link style={{ textDecoration: "none" }} to={"/admin"}>
                 <ThickButton>Administrera kurser</ThickButton>
               </Link>
               <AdvancedSpacing

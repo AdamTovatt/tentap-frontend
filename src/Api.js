@@ -14,12 +14,8 @@ export async function Register(email, password, username) {
   });
 }
 
-export function GetAllCourses() {
-  fetch(GetBasePath() + "course/getall")
-    .then((response) => response.json())
-    .then((responseData) => {
-      console.log(responseData);
-    });
+export async function GetAllCourses() {
+  return await fetch(GetBasePath() + "course/getall");
 }
 
 function GetBasePath() {

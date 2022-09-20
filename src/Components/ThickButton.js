@@ -1,16 +1,45 @@
 import styled from "styled-components";
 import { Color, BorderRadius } from "./Constants";
 
-const ThickButton = styled.button`
+const ThickButton = (props) => {
+  if (props.secondLine) {
+    console.log("Has second text line: " + props.secondLine);
+  }
+
+  return (
+    <>
+      {props.secondLine ? (
+        <ThickButtonHtml {...props}>
+          <ThickButtonText style={{ fontWeight: 500 }}>
+            {props.children}
+          </ThickButtonText>
+          <ThickButtonText>{props.secondLine}</ThickButtonText>
+        </ThickButtonHtml>
+      ) : (
+        <ThickButtonHtml>{props.children}</ThickButtonHtml>
+      )}
+    </>
+  );
+};
+
+const ThickButtonText = styled.div`
+  text-decoration: none;
+`;
+
+const ThickButtonHtml = styled.button`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   background-color: ${(props) => (props.Color ? props.Color : Color.Blue)};
   font-size: 1em;
   font-family: "Jost";
-  padding-top: 1.875rem;
-  padding-bottom: 1.875rem;
+  max-height: 5.25rem;
+  height: 5.25rem;
   width: ${(props) => (props.Width ? props.Width : "18rem")};
   border-radius: ${BorderRadius.Default};
   border: none;
   color: ${(props) => (props.TextColor ? props.TextColor : Color.White)};
+  text-decoration: none;
 
   cursor: pointer;
 

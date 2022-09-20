@@ -14,9 +14,6 @@ const StartPage = () => {
   const userInfo = cookies.get("userInfo");
   const isLoggedIn = userInfo !== undefined && userInfo != null;
 
-  console.log(userInfo == null);
-  console.log("Logged in: " + isLoggedIn);
-
   return (
     <CenterScreen>
       <StartPageMainContainer>
@@ -115,7 +112,12 @@ function Logout(cookies) {
   window.location.reload();
 }
 
-const ComponentContainer = styled.div``;
+const ComponentContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+`;
 
 const StartPageHeader = styled.div`
   font-size: 2em;
