@@ -16,6 +16,7 @@ import CourseContainer from "../CourseContainer";
 const AdminPage = () => {
   const [course, setCourse] = useState(null);
   const [courses, setCourses] = useState(null);
+  const [source, setSource] = useState(null);
   const [coursesFetchError, setCoursesFetchError] = useState(false);
   const [coursesSearchText, setCoursesSearchText] = useState("");
 
@@ -60,6 +61,7 @@ const AdminPage = () => {
                 <CourseContainer
                   courseSelected={(course) => {
                     console.log(course);
+                    setCourse(course);
                   }}
                   createCourse={() => {
                     console.log("lol");
@@ -104,20 +106,32 @@ const AdminPage = () => {
           </AdminSection>
         )}
         <AdminSection>
-          <ComponentContainer>
-            <SubHeader>Skapa eller välj en kurs att redigera</SubHeader>
-            <AdvancedSpacing
-              MinHeight={1.8}
-              MaxHeight={4.6}
-              ScreenPercentage={5}
-            />
-            <ThickButton>Gå till kurser</ThickButton>
-          </ComponentContainer>
-          <ComponentContainer>
-            <ThinButton Color={Color.Green} Width={"17rem"}>
-              Mer information
-            </ThinButton>
-          </ComponentContainer>
+          {source === null ? (
+            <AdminSection>
+              <LockedSection>
+                <LockedText>
+                  Här kan du skapa en uppgift när du valt kurs och tenta till vänster
+                </LockedText>
+              </LockedSection>
+            </AdminSection>
+          ) : (
+            <AdminSection>
+              <ComponentContainer>
+                <SubHeader>Skapa eller välj en kurs att redigera</SubHeader>
+                <AdvancedSpacing
+                  MinHeight={1.8}
+                  MaxHeight={4.6}
+                  ScreenPercentage={5}
+                />
+                <ThickButton>Gå till kurser</ThickButton>
+              </ComponentContainer>
+              <ComponentContainer>
+                <ThinButton Color={Color.Green} Width={"17rem"}>
+                  Mer information
+                </ThinButton>
+              </ComponentContainer>
+            </AdminSection>
+          )}
         </AdminSection>
       </SectionsMainContainer>
     </CenterScreen>
