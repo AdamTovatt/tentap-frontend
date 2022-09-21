@@ -3,7 +3,7 @@ import { Color, BorderRadius } from "./Constants";
 import Spacing from "./Spacing";
 import ThickButton from "./ThickButton";
 
-const CourseContainer = ({ courses, courseSelected, createCourse }) => {
+const CourseContainer = ({ courses, courseSelected, createCourse, width }) => {
   if (!courseSelected)
     console.error(
       "Course container should have courseSelected property as a function!!"
@@ -22,6 +22,7 @@ const CourseContainer = ({ courses, courseSelected, createCourse }) => {
           <>
             {course.id !== -1 ? (
               <ThickButton
+                width={width}
                 onClick={() => {
                   courseSelected(course.id);
                 }}
@@ -32,6 +33,7 @@ const CourseContainer = ({ courses, courseSelected, createCourse }) => {
               </ThickButton>
             ) : (
               <ThickButton
+                width={width}
                 Color={Color.Cyan}
                 TextColor={Color.Dark}
                 onClick={() => {

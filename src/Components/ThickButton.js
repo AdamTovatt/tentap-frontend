@@ -16,7 +16,7 @@ const ThickButton = (props) => {
           <ThickButtonText>{props.secondLine}</ThickButtonText>
         </ThickButtonHtml>
       ) : (
-        <ThickButtonHtml>{props.children}</ThickButtonHtml>
+        <ThickButtonHtml {...props}>{props.children}</ThickButtonHtml>
       )}
     </>
   );
@@ -35,7 +35,7 @@ const ThickButtonHtml = styled.button`
   font-family: "Jost";
   max-height: 5.25rem;
   height: 5.25rem;
-  width: ${(props) => (props.Width ? props.Width : "18rem")};
+  width: ${(props) => (props.width ? props.width + "rem" : "18rem")};
   border-radius: ${BorderRadius.Default};
   border: none;
   color: ${(props) => (props.TextColor ? props.TextColor : Color.White)};

@@ -1,11 +1,12 @@
 import styled from "styled-components";
 import { BorderRadius, Color } from "./Constants";
 
-const TextField = ({ title, placeHolder, type, setState, onSumbit }) => {
+const TextField = ({ title, placeHolder, type, setState, onSumbit, width }) => {
   return (
-    <TextFieldContainer>
+    <TextFieldContainer Width={width}>
       <TextAreaTitle>{title}</TextAreaTitle>
       <CustomTextArea
+        Width={width}
         onKeyDown={(event) => {
           if (event.key === "Enter") {
             if (onSumbit) onSumbit();
@@ -21,7 +22,9 @@ const TextField = ({ title, placeHolder, type, setState, onSumbit }) => {
   );
 };
 
-const TextFieldContainer = styled.div``;
+const TextFieldContainer = styled.div`
+  width: ${(props) => (props.Width ? props.Width + "rem" : "16.3rem")};
+`;
 
 const TextAreaTitle = styled.div`
   text-align: left;
@@ -32,7 +35,7 @@ const TextAreaTitle = styled.div`
 `;
 
 const CustomTextArea = styled.input`
-  width: ${(props) => (props.Width ? props.Width : "16.3rem")};
+  width: ${(props) => (props.Width ? props.Width - 1.7 + "rem" : "16.3rem")};
   background-color: ${(props) => (props.Color ? props.Color : Color.Blue)};
   border: none;
   border-radius: ${BorderRadius.Default};

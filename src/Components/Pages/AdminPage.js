@@ -19,6 +19,7 @@ const AdminPage = () => {
   const [source, setSource] = useState(null);
   const [coursesFetchError, setCoursesFetchError] = useState(false);
   const [coursesSearchText, setCoursesSearchText] = useState("");
+  const [creatingNewCourse, setCreatingNewCourse] = useState(false);
 
   const cookies = new Cookies();
   const navigate = useNavigate();
@@ -50,6 +51,7 @@ const AdminPage = () => {
               setState={setCoursesSearchText}
               title={"Sök:"}
               placeHolder={"Kursnamn eller kod..."}
+              width={20}
             ></TextField>
             <AdvancedSpacing
               MinHeight={1.8}
@@ -58,16 +60,21 @@ const AdminPage = () => {
             />
             {courses ? (
               <>
-                <CourseContainer
-                  courseSelected={(course) => {
-                    console.log(course);
-                    setCourse(course);
-                  }}
-                  createCourse={() => {
-                    console.log("lol");
-                  }}
-                  courses={courses}
-                />
+                {creatingNewCourse ? (
+                  <CreateNewCourseModule />
+                ) : (
+                  <CourseContainer
+                    width={20}
+                    courseSelected={(course) => {
+                      console.log(course);
+                      setCourse(course);
+                    }}
+                    createCourse={() => {
+                      setCreatingNewCourse(true);
+                    }}
+                    courses={courses}
+                  />
+                )}
               </>
             ) : null}
           </ComponentContainer>
@@ -110,7 +117,8 @@ const AdminPage = () => {
             <AdminSection>
               <LockedSection>
                 <LockedText>
-                  Här kan du skapa en uppgift när du valt kurs och tenta till vänster
+                  Här kan du skapa en uppgift när du valt kurs och tenta till
+                  vänster
                 </LockedText>
               </LockedSection>
             </AdminSection>
@@ -137,6 +145,26 @@ const AdminPage = () => {
     </CenterScreen>
   );
 };
+
+const CreateNewCourseModule = () => {
+  const [newCourseName, setNewCourseName] = useState("");
+
+  return (
+    <CreateNewCourseModuleDiv>
+      <TextField
+        width={"18rem"}
+        setState={setNewCourseName}
+        title={"Kursnamn:"}
+        placeHolder={"Namn på kursen"}
+      />
+    </CreateNewCourseModuleDiv>
+  );
+};
+
+const CreateNewCourseModuleDiv = styled.div`
+  width: 20rem;
+  background-color: ${Color.Cyan};
+`;
 
 const ComponentContainer = styled.div``;
 
@@ -187,7 +215,7 @@ const AdminSection = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  width: 18rem;
+  width: 20rem;
 
   @media (min-width: 640px) {
     text-align: center;
