@@ -15,12 +15,14 @@ import Cookies from "universal-cookie";
 const LoginPage = () => {
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
+  const [loginButton, setLoginButton] = useState(null);
 
   const navigate = useNavigate();
   const cookies = new Cookies();
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    setLoginButton(document.getElementById("loginButton"));
   }, []);
 
   return (
@@ -36,7 +38,7 @@ const LoginPage = () => {
             title={"Email:"}
             placeHolder={"Din emailaddress..."}
             onSumbit={async () => {
-              await HandleLogin(email, password, cookies, navigate);
+              await loginButton.click();
             }}
           />
           <AdvancedSpacing MinHeight={0.8} MaxHeight={1} ScreenPercentage={2} />
@@ -46,7 +48,7 @@ const LoginPage = () => {
             placeHolder={"Ditt lösenord..."}
             type={"password"}
             onSumbit={async () => {
-              await HandleLogin(email, password, cookies, navigate);
+              await loginButton.click();
             }}
           />
           <AdvancedSpacing
@@ -56,6 +58,7 @@ const LoginPage = () => {
           />
           <Link to="/login">
             <ThinButton
+              id="loginButton"
               Color={Color.Green}
               onClick={async () => {
                 await HandleLogin(email, password, cookies, navigate);

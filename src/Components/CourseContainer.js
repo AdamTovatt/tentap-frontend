@@ -19,7 +19,7 @@ const CourseContainer = ({ courses, courseSelected, createCourse, width }) => {
     <CourseContainerDiv>
       {displayCourses.map((course) => {
         return (
-          <>
+          <div key={course.id}>
             {course.id !== -1 ? (
               <ThickButton
                 width={width}
@@ -46,7 +46,7 @@ const CourseContainer = ({ courses, courseSelected, createCourse, width }) => {
               </ThickButton>
             )}
             <Spacing Height={"1rem"} />
-          </>
+          </div>
         );
       })}
     </CourseContainerDiv>

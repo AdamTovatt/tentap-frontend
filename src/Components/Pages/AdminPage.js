@@ -181,8 +181,9 @@ const CreateNewCourseModule = ({ onCancel, onCreate }) => {
         Color={Color.Cyan}
         TextColor={Color.Dark}
         onClick={() => {
-          if (newCourseName !== "" && newCourseCode !== "")
+          if (newCourseName !== "" && newCourseCode !== "") {
             onCreate(newCourseName, newCourseCode);
+          }
         }}
       >
         Skapa
