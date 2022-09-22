@@ -73,6 +73,7 @@ const AdminPage = () => {
 
                       if (createResult.status === 200) {
                         setCreatingNewCourse(false);
+                        setCourses(null);
                       }
                     }}
                   />
