@@ -9,7 +9,7 @@ import CenterScreen from "../CenterScreen";
 import AdvancedSpacing from "../AdvancedSpacing";
 import Cookies from "universal-cookie";
 import { useEffect, useState } from "react";
-import { GetAllCourses } from "../../Api";
+import { CreateNewCourse, GetAllCourses } from "../../Api";
 import TextField from "../TextField";
 import CourseContainer from "../CourseContainer";
 
@@ -65,11 +65,15 @@ const AdminPage = () => {
                     onCancel={() => {
                       setCreatingNewCourse(false);
                     }}
-                    onCreate={(courseName, courseCode) => {
-                      console.log(
-                        "Name: " + courseName + " Code: " + courseCode
+                    onCreate={async (courseName, courseCode) => {
+                      let createResult = await CreateNewCourse(
+                        courseName,
+                        courseCode
                       );
-                      setCreatingNewCourse(false);
+
+                      if (createResult.status === 200) {
+                        setCreatingNewCourse(false);
+                      }
                     }}
                   />
                 ) : (
@@ -180,9 +184,9 @@ const CreateNewCourseModule = ({ onCancel, onCreate }) => {
       <ThinButton
         Color={Color.Cyan}
         TextColor={Color.Dark}
-        onClick={() => {
+        onClick={async () => {
           if (newCourseName !== "" && newCourseCode !== "") {
-            onCreate(newCourseName, newCourseCode);
+            await onCreate(newCourseName, newCourseCode);
           }
         }}
       >

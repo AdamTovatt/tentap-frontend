@@ -1,3 +1,5 @@
+import Cookies from "universal-cookie";
+
 export async function Login(email, password) {
   return await fetch(GetBasePath() + "user/login", {
     method: "POST",
@@ -11,6 +13,20 @@ export async function Register(email, password, username) {
     method: "POST",
     body: JSON.stringify({ name: username, email, password }),
     headers: { "Content-Type": "application/json" },
+  });
+}
+
+export async function CreateNewCourse(name, code) {
+  const cookies = new Cookies();
+  const userInfo = cookies.get("userInfo");
+
+  return await fetch(GetBasePath() + "admin/course/create", {
+    method: "POST",
+    body: JSON.stringify({ name, code }),
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + userInfo.token,
+    },
   });
 }
 
