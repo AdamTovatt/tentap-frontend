@@ -313,7 +313,13 @@ const CreateNewCourseModuleDiv = styled.div`
   border-radius: 12px;
 `;
 
-const ComponentContainer = styled.div``;
+const ComponentContainer = styled.div`
+  width: 22rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
 
 const LockedSection = styled.div`
   width: 100%;
@@ -362,7 +368,7 @@ const AdminSection = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  width: 20rem;
+  width: 22rem;
 
   @media (min-width: 640px) {
     text-align: center;

@@ -57,6 +57,18 @@ const SourceContainer = ({ sources, sourceSelected, createSource, width }) => {
 const SourceContainerDiv = styled.div`
   min-height: 2rem;
   min-width: 2rem;
+  height: 100%;
+  max-height: 40rem;
+  overflow: visible;
+  overflow-y: auto;
+  width: 20rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  ::-webkit-scrollbar {
+    width: 2px;
+  }
 `;
 
 export default SourceContainer;
