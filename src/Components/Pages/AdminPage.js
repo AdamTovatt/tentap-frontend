@@ -61,7 +61,17 @@ const AdminPage = () => {
             {courses ? (
               <>
                 {creatingNewCourse ? (
-                  <CreateNewCourseModule />
+                  <CreateNewCourseModule
+                    onCancel={() => {
+                      setCreatingNewCourse(false);
+                    }}
+                    onCreate={(courseName, courseCode) => {
+                      console.log(
+                        "Name: " + courseName + " Code: " + courseCode
+                      );
+                      setCreatingNewCourse(false);
+                    }}
+                  />
                 ) : (
                   <CourseContainer
                     width={20}
@@ -79,7 +89,7 @@ const AdminPage = () => {
             ) : null}
           </ComponentContainer>
           <ComponentContainer>
-            <Link to={"/"}>
+            <Link to={"/me"}>
               <ThinButton Color={Color.Red} TextColor={Color.Dark}>
                 Tillbaka
               </ThinButton>
@@ -146,24 +156,60 @@ const AdminPage = () => {
   );
 };
 
-const CreateNewCourseModule = () => {
+const CreateNewCourseModule = ({ onCancel, onCreate }) => {
   const [newCourseName, setNewCourseName] = useState("");
+  const [newCourseCode, setNewCourseCode] = useState("");
 
   return (
     <CreateNewCourseModuleDiv>
+      <Spacing Height={"0.9rem"} />
       <TextField
-        width={"18rem"}
+        width={18}
         setState={setNewCourseName}
         title={"Kursnamn:"}
         placeHolder={"Namn på kursen"}
       />
+      <Spacing Height={"1rem"} />
+      <TextField
+        width={18}
+        setState={setNewCourseCode}
+        title={"Kurskod:"}
+        placeHolder={"Kod för kursen"}
+      />
+      <Spacing Height={"1.5rem"} />
+      <ThinButton
+        Color={Color.Cyan}
+        TextColor={Color.Dark}
+        onClick={() => {
+          if (newCourseName !== "" && newCourseCode !== "")
+            onCreate(newCourseName, newCourseCode);
+        }}
+      >
+        Skapa
+      </ThinButton>
+      <Spacing Height={"1rem"} />
+      <ThinButton
+        Color={Color.Red}
+        TextColor={Color.Dark}
+        onClick={() => {
+          onCancel();
+        }}
+      >
+        Avbryt
+      </ThinButton>
+      <Spacing Height={"1.2rem"} />
     </CreateNewCourseModuleDiv>
   );
 };
 
 const CreateNewCourseModuleDiv = styled.div`
   width: 20rem;
-  background-color: ${Color.Cyan};
+  background-color: ${Color.FadedBlue};
+  background-color: rgb(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  border-radius: 12px;
 `;
 
 const ComponentContainer = styled.div``;
