@@ -61,7 +61,7 @@ const SourceContainerDiv = styled.div`
   max-height: 40rem;
   overflow: visible;
   overflow-y: auto;
-  width: 20rem;
+  width: 22rem;
   display: flex;
   flex-direction: column;
   align-items: center;

@@ -67,11 +67,7 @@ const AdminPage = () => {
               placeHolder={"Kursnamn eller kod..."}
               width={20}
             ></TextField>
-            <AdvancedSpacing
-              MinHeight={1.8}
-              MaxHeight={4.6}
-              ScreenPercentage={5}
-            />
+            <Spacing Height={"2.2rem"} />
             {courses ? (
               <>
                 {creatingNewCourse ? (
@@ -110,8 +106,13 @@ const AdminPage = () => {
             ) : null}
           </ComponentContainer>
           <ComponentContainer>
+            <Spacing Height={"2.2rem"} />
             <Link to={"/me"}>
-              <ThinButton Color={Color.Red} TextColor={Color.Dark}>
+              <ThinButton
+                Width={"20rem"}
+                Color={Color.Red}
+                TextColor={Color.Dark}
+              >
                 Tillbaka
               </ThinButton>
             </Link>
@@ -129,11 +130,16 @@ const AdminPage = () => {
           <AdminSection>
             <ComponentContainer>
               <SubHeader>{course.name}</SubHeader>
-              <AdvancedSpacing
-                MinHeight={1.8}
-                MaxHeight={4.6}
-                ScreenPercentage={5}
-              />
+              <Spacing Height={"2.2rem"} />
+              <TextField
+                setState={setCoursesSearchText}
+                title={"Sök:"}
+                placeHolder={"Kursnamn eller kod..."}
+                width={20}
+              ></TextField>
+              <Spacing Height={"2.2rem"} />
+            </ComponentContainer>
+            <ComponentContainer>
               {creatingNewSource ? (
                 <CreateNewSourceModule
                   onCancel={() => {
@@ -156,6 +162,7 @@ const AdminPage = () => {
                 <>
                   {sources === null ? null : (
                     <SourceContainer
+                      width={20}
                       sourceSelected={(sourceId) => {
                         console.log(sourceId);
                       }}
@@ -167,11 +174,6 @@ const AdminPage = () => {
                   )}
                 </>
               )}
-            </ComponentContainer>
-            <ComponentContainer>
-              <ThinButton Color={Color.Green} Width={"17rem"}>
-                Mer information
-              </ThinButton>
             </ComponentContainer>
           </AdminSection>
         )}
@@ -367,7 +369,6 @@ const AdminSection = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
   width: 22rem;
 
   @media (min-width: 640px) {

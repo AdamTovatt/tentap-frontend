@@ -26,6 +26,7 @@ const ThickButtonHtml = styled.button`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   background-color: ${(props) => (props.Color ? props.Color : Color.Blue)};
   font-size: 1em;
   font-family: "Jost";
