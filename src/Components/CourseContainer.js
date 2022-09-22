@@ -55,6 +55,18 @@ const CourseContainer = ({ courses, courseSelected, createCourse, width }) => {
 const CourseContainerDiv = styled.div`
   min-height: 2rem;
   min-width: 2rem;
+  height: 100%;
+  max-height: 34.5rem;
+  overflow: visible;
+  overflow-y: auto;
+  width: 22rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  ::-webkit-scrollbar {
+    width: 2px;
+  }
 `;
 
 export default CourseContainer;

@@ -23,6 +23,8 @@ const SourceContainer = ({ sources, sourceSelected, createSource, width }) => {
           <div key={course.id}>
             {course.id !== -1 ? (
               <ThickButton
+                Color={Color.Blue}
+                TextColor={Color.White}
                 width={width}
                 onClick={() => {
                   sourceSelected(course.id);
