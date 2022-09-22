@@ -9,9 +9,15 @@ import CenterScreen from "../CenterScreen";
 import AdvancedSpacing from "../AdvancedSpacing";
 import Cookies from "universal-cookie";
 import { useEffect, useState } from "react";
-import { CreateNewCourse, GetAllCourses } from "../../Api";
+import {
+  CreateNewCourse,
+  CreateNewSource,
+  GetAllCourses,
+  GetAllSourcesForCourse,
+} from "../../Api";
 import TextField from "../TextField";
 import CourseContainer from "../CourseContainer";
+import SourceContainer from "../SourceContainer";
 
 const AdminPage = () => {
   const [course, setCourse] = useState(null);
@@ -20,6 +26,8 @@ const AdminPage = () => {
   const [coursesFetchError, setCoursesFetchError] = useState(false);
   const [coursesSearchText, setCoursesSearchText] = useState("");
   const [creatingNewCourse, setCreatingNewCourse] = useState(false);
+  const [creatingNewSource, setCreatingNewSource] = useState(false);
+  const [sources, setSources] = useState(null);
 
   const cookies = new Cookies();
   const navigate = useNavigate();
@@ -33,12 +41,18 @@ const AdminPage = () => {
     }
     async function FetchCourses() {
       let response = await GetAllCourses();
-      console.log(response.status);
       setCourses(await response.json());
     }
 
+    async function FetchSources() {
+      let response = await GetAllSourcesForCourse(course.id);
+      console.log(response.status);
+      setSources(await response.json());
+    }
+
     if (courses === null) FetchCourses();
-  }, [navigate, isLoggedIn, coursesSearchText, courses]);
+    if (course !== null && sources === null) FetchSources();
+  }, [navigate, isLoggedIn, coursesSearchText, courses, sources, course]);
 
   return (
     <CenterScreen>
@@ -80,12 +94,14 @@ const AdminPage = () => {
                 ) : (
                   <CourseContainer
                     width={20}
-                    courseSelected={(course) => {
-                      console.log(course);
-                      setCourse(course);
+                    courseSelected={(courseId) => {
+                      setCourse(courses.find((x) => x.id === courseId));
+                      setSources(null);
+                      setCreatingNewSource(false);
                     }}
                     createCourse={() => {
                       setCreatingNewCourse(true);
+                      setCreatingNewSource(false);
                     }}
                     courses={courses}
                   />
@@ -112,13 +128,45 @@ const AdminPage = () => {
         ) : (
           <AdminSection>
             <ComponentContainer>
-              <SubHeader>Skapa eller välj en kurs att redigera</SubHeader>
+              <SubHeader>{course.name}</SubHeader>
               <AdvancedSpacing
                 MinHeight={1.8}
                 MaxHeight={4.6}
                 ScreenPercentage={5}
               />
-              <ThickButton>Gå till kurser</ThickButton>
+              {creatingNewSource ? (
+                <CreateNewSourceModule
+                  onCancel={() => {
+                    setCreatingNewSource(false);
+                  }}
+                  onCreate={async (author, sourceDate) => {
+                    let createResult = await CreateNewSource(
+                      course.id,
+                      author,
+                      sourceDate
+                    );
+
+                    if (createResult.status === 200) {
+                      setCreatingNewSource(false);
+                      setSources(null);
+                    }
+                  }}
+                />
+              ) : (
+                <>
+                  {sources === null ? null : (
+                    <SourceContainer
+                      sourceSelected={(sourceId) => {
+                        console.log(sourceId);
+                      }}
+                      createSource={() => {
+                        setCreatingNewSource(true);
+                      }}
+                      sources={sources}
+                    />
+                  )}
+                </>
+              )}
             </ComponentContainer>
             <ComponentContainer>
               <ThinButton Color={Color.Green} Width={"17rem"}>
@@ -158,6 +206,53 @@ const AdminPage = () => {
         </AdminSection>
       </SectionsMainContainer>
     </CenterScreen>
+  );
+};
+
+const CreateNewSourceModule = ({ onCancel, onCreate }) => {
+  const [newSourceAuthor, setNewSourceAuthor] = useState("");
+  const [newSourceDate, setNewSourceDate] = useState("");
+
+  return (
+    <CreateNewCourseModuleDiv>
+      <Spacing Height={"0.9rem"} />
+      <TextField
+        width={18}
+        setState={setNewSourceAuthor}
+        title={"Författare:"}
+        placeHolder={"Namn på författaren"}
+      />
+      <Spacing Height={"1rem"} />
+      <TextField
+        width={18}
+        setState={setNewSourceDate}
+        title={"Datum:"}
+        placeHolder={"Datum t.ex: (1999-09-18)"}
+      />
+      <Spacing Height={"1.5rem"} />
+      <ThinButton
+        Color={Color.Cyan}
+        TextColor={Color.Dark}
+        onClick={async () => {
+          if (newSourceAuthor !== "" && newSourceDate !== "") {
+            await onCreate(newSourceAuthor, newSourceDate);
+          }
+        }}
+      >
+        Skapa
+      </ThinButton>
+      <Spacing Height={"1rem"} />
+      <ThinButton
+        Color={Color.Red}
+        TextColor={Color.Dark}
+        onClick={() => {
+          onCancel();
+        }}
+      >
+        Avbryt
+      </ThinButton>
+      <Spacing Height={"1.2rem"} />
+    </CreateNewCourseModuleDiv>
   );
 };
 

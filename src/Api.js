@@ -16,6 +16,20 @@ export async function Register(email, password, username) {
   });
 }
 
+export async function CreateNewSource(courseId, author, date) {
+  const cookies = new Cookies();
+  const userInfo = cookies.get("userInfo");
+
+  return await fetch(GetBasePath() + "admin/source/create", {
+    method: "POST",
+    body: JSON.stringify({ courseId, author, date }),
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + userInfo.token,
+    },
+  });
+}
+
 export async function CreateNewCourse(name, code) {
   const cookies = new Cookies();
   const userInfo = cookies.get("userInfo");
@@ -28,6 +42,12 @@ export async function CreateNewCourse(name, code) {
       Authorization: "Bearer " + userInfo.token,
     },
   });
+}
+
+export async function GetAllSourcesForCourse(courseId) {
+  return await fetch(
+    GetBasePath() + "course/getSourcesByCourseId?courseId=" + courseId
+  );
 }
 
 export async function GetAllCourses() {

@@ -3,19 +3,21 @@ import { Color, BorderRadius } from "./Constants";
 import Spacing from "./Spacing";
 import ThickButton from "./ThickButton";
 
-const CourseContainer = ({ courses, courseSelected, createCourse, width }) => {
-  if (!courseSelected)
+const SourceContainer = ({ sources, sourceSelected, createSource, width }) => {
+  if (!sourceSelected)
     console.error(
-      "Course container should have courseSelected property as a function!!"
+      "Source container should have sourceSelected property as a function!!"
     );
 
-  const displayCourses = [...courses];
+  const displayCourses = [...sources];
 
-  if (createCourse)
-    displayCourses.push({ id: -1, name: "Skapa ny", code: "+" });
+  if (createSource)
+    displayCourses.push({ id: -1, author: "Skapa ny", date: "+" });
+
+  console.log(sources[0]);
 
   return (
-    <CourseContainerDiv>
+    <SourceContainerDiv>
       {displayCourses.map((course) => {
         return (
           <div key={course.id}>
@@ -23,12 +25,12 @@ const CourseContainer = ({ courses, courseSelected, createCourse, width }) => {
               <ThickButton
                 width={width}
                 onClick={() => {
-                  courseSelected(course.id);
+                  sourceSelected(course.id);
                 }}
-                key={course.code}
-                secondLine={course.code}
+                key={course.id}
+                secondLine={course.date.split("T")[0]}
               >
-                {course.name}
+                {course.author}
               </ThickButton>
             ) : (
               <ThickButton
@@ -36,25 +38,25 @@ const CourseContainer = ({ courses, courseSelected, createCourse, width }) => {
                 Color={Color.Cyan}
                 TextColor={Color.Dark}
                 onClick={() => {
-                  createCourse();
+                  createSource();
                 }}
-                key={course.code}
-                secondLine={course.code}
+                key={course.id}
+                secondLine={course.date}
               >
-                {course.name}
+                {course.author}
               </ThickButton>
             )}
             <Spacing Height={"1rem"} />
           </div>
         );
       })}
-    </CourseContainerDiv>
+    </SourceContainerDiv>
   );
 };
 
-const CourseContainerDiv = styled.div`
+const SourceContainerDiv = styled.div`
   min-height: 2rem;
   min-width: 2rem;
 `;
 
-export default CourseContainer;
+export default SourceContainer;

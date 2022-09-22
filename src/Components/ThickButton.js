@@ -2,10 +2,6 @@ import styled from "styled-components";
 import { Color, BorderRadius } from "./Constants";
 
 const ThickButton = (props) => {
-  if (props.secondLine) {
-    console.log("Has second text line: " + props.secondLine);
-  }
-
   return (
     <>
       {props.secondLine ? (
