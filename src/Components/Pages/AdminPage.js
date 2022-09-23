@@ -18,6 +18,7 @@ import {
 import TextField from "../TextField";
 import CourseContainer from "../CourseContainer";
 import SourceContainer from "../SourceContainer";
+import DifficultySelection from "../DifficultySelection";
 
 const AdminPage = () => {
   const [course, setCourse] = useState(null);
@@ -151,7 +152,6 @@ const AdminPage = () => {
                       author,
                       sourceDate
                     );
-
                     if (createResult.status === 200) {
                       setCreatingNewSource(false);
                       setSources(null);
@@ -164,7 +164,8 @@ const AdminPage = () => {
                     <SourceContainer
                       width={20}
                       sourceSelected={(sourceId) => {
-                        console.log(sourceId);
+                        console.log(sources[sourceId]);
+                        setSource(sources[sourceId]);
                       }}
                       createSource={() => {
                         setCreatingNewSource(true);
@@ -190,17 +191,27 @@ const AdminPage = () => {
           ) : (
             <AdminSection>
               <ComponentContainer>
-                <SubHeader>Skapa eller välj en kurs att redigera</SubHeader>
-                <AdvancedSpacing
-                  MinHeight={1.8}
-                  MaxHeight={4.6}
-                  ScreenPercentage={5}
+                <SubHeader>
+                  {source.author + " " + source.date.split("T")[0]}
+                </SubHeader>
+                <Spacing Height={"2.2rem"} />
+                <BodyText>Svårhetsgrad</BodyText>
+                <Spacing Height={"0.5rem"} />
+                <DifficultySelection
+                  width={20}
+                  allowMultipleSettings={false}
+                  onChangedDifficultySetting={(difficultySettings) => {
+                    console.log(difficultySettings);
+                  }}
                 />
-                <ThickButton>Gå till kurser</ThickButton>
               </ComponentContainer>
               <ComponentContainer>
-                <ThinButton Color={Color.Green} Width={"17rem"}>
-                  Mer information
+                <ThinButton
+                  Color={Color.Green}
+                  TextColor={Color.Dark}
+                  Width={"20rem"}
+                >
+                  Spara uppgift
                 </ThinButton>
               </ComponentContainer>
             </AdminSection>
@@ -339,6 +350,17 @@ const LockedText = styled.div`
   font-family: "Jost";
   font-size: 1.25rem;
   padding: 1.75rem;
+`;
+
+const BodyText = styled.div`
+  font-size: 1rem;
+  color: ${Color.White};
+  max-width: 32rem;
+  font-weight: 500;
+
+  @media (max-width: 640px) {
+    max-width: 18rem;
+  }
 `;
 
 const SubHeader = styled.div`
