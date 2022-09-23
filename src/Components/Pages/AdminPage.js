@@ -165,8 +165,7 @@ const AdminPage = () => {
                     <SourceContainer
                       width={20}
                       sourceSelected={(sourceId) => {
-                        console.log(sources[sourceId]);
-                        setSource(sources[sourceId]);
+                        setSource(sources.find((x) => x.id === sourceId));
                       }}
                       createSource={() => {
                         setCreatingNewSource(true);
