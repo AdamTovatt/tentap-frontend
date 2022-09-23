@@ -19,6 +19,7 @@ import TextField from "../TextField";
 import CourseContainer from "../CourseContainer";
 import SourceContainer from "../SourceContainer";
 import DifficultySelection from "../DifficultySelection";
+import SquareImageButton from "../SquareImageButton";
 
 const AdminPage = () => {
   const [course, setCourse] = useState(null);
@@ -204,8 +205,37 @@ const AdminPage = () => {
                     console.log(difficultySettings);
                   }}
                 />
+                <Spacing Height={"1.2rem"} />
+                <BodyText>Tenta</BodyText>
+                <Spacing Height={"0.5rem"} />
+                <ThickButton secondLine={source.date.split("T")[0]} width={20}>
+                  {source.author}
+                </ThickButton>
+                <Spacing Height={"1.6rem"} />
+                <SquareButtonContainers>
+                  <SquareButtonText>Problem</SquareButtonText>
+                  <SquareButtonText>Lösning</SquareButtonText>
+                </SquareButtonContainers>
+                <Spacing Height={"0.5rem"} />
+                <SquareButtonContainers>
+                  <SquareImageButton
+                    source={
+                      "https://res.cloudinary.com/tentap/image/upload/v1642018188/btoitwlkeh4ktmyqw1eo.jpg"
+                    }
+                  />
+                  <SquareImageButton />
+                </SquareButtonContainers>
+                <Spacing Height={"2.2rem"} />
               </ComponentContainer>
               <ComponentContainer>
+                <ThinButton
+                  Color={Color.Cyan}
+                  TextColor={Color.Dark}
+                  Width={"20rem"}
+                >
+                  Ladda upp nya bilder
+                </ThinButton>
+                <Spacing Height={"1.2rem"} />
                 <ThinButton
                   Color={Color.Green}
                   TextColor={Color.Dark}
@@ -315,6 +345,18 @@ const CreateNewCourseModule = ({ onCancel, onCreate }) => {
     </CreateNewCourseModuleDiv>
   );
 };
+
+const SquareButtonText = styled.div`
+  width: 9rem;
+  font-weight: 500;
+  font-family: "Jost";
+`;
+
+const SquareButtonContainers = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 20rem;
+`;
 
 const CreateNewCourseModuleDiv = styled.div`
   width: 20rem;
