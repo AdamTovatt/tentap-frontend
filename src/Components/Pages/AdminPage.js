@@ -18,6 +18,7 @@ import {
   CreateNewModule,
   GetBasePath,
   CreateNewExercise,
+  GetExerciseById,
 } from "../../Api";
 import TextField from "../TextField";
 import CourseContainer from "../CourseContainer";
@@ -79,6 +80,7 @@ const AdminPage = () => {
     sources,
     course,
     modules,
+    exercise,
   ]);
 
   return (
@@ -309,11 +311,41 @@ const AdminPage = () => {
                     <Spacing Height={"0.5rem"} />
                     <SquareButtonContainers>
                       <SquareImageButton
+                        onClick={async () => {
+                          if (exercise) {
+                            let result = await GetExerciseById(exercise.id);
+                            let json = await result.json();
+                            setExercise(json);
+                            if (result.status === 200) {
+                            } else {
+                              console.log("Fel när övning skulle hämtas");
+                            }
+                          }
+                        }}
                         source={
-                          "https://res.cloudinary.com/tentap/image/upload/v1642018188/btoitwlkeh4ktmyqw1eo.jpg"
+                          exercise && exercise.problemImage
+                            ? exercise.problemImage.url
+                            : null
                         }
                       />
-                      <SquareImageButton />
+                      <SquareImageButton
+                        onClick={async () => {
+                          if (exercise) {
+                            let result = await GetExerciseById(exercise.id);
+                            let json = await result.json();
+                            setExercise(json);
+                            if (result.status === 200) {
+                            } else {
+                              console.log("Fel när övning skulle hämtas");
+                            }
+                          }
+                        }}
+                        source={
+                          exercise && exercise.solutionImage
+                            ? exercise.solutionImage.url
+                            : null
+                        }
+                      />
                     </SquareButtonContainers>
                     <Spacing Height={"2.2rem"} />
                   </ComponentContainer>

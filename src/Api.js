@@ -72,6 +72,12 @@ export async function CreateNewExercise(id, difficulty, sourceId, moduleId) {
   });
 }
 
+export async function GetExerciseById(exerciseId) {
+  return await fetch(
+    GetBasePath() + "course/exercise/get?exerciseId=" + exerciseId
+  );
+}
+
 export async function GetAllModulesForCourse(courseId) {
   return await fetch(
     GetBasePath() + "course/getModulesByCourseId?courseId=" + courseId

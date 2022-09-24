@@ -1,10 +1,10 @@
 import styled from "styled-components";
 import { Color, BorderRadius } from "./Constants";
 
-const SquareImageButton = ({ source }) => {
+const SquareImageButton = ({ source, onClick }) => {
   console.log(source);
   return (
-    <ButtonHtml>
+    <ButtonHtml onClick={onClick}>
       {source && source.length > 0 ? (
         <Image src={source} alt="Bild från uppgift" />
       ) : (
