@@ -14,8 +14,6 @@ const SourceContainer = ({ sources, sourceSelected, createSource, width }) => {
   if (createSource)
     displayCourses.push({ id: -1, author: "Skapa ny", date: "+" });
 
-  console.log(sources[0]);
-
   return (
     <SourceContainerDiv>
       {displayCourses.map((course) => {

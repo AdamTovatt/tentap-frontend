@@ -16,6 +16,8 @@ import {
   GetAllModulesForCourse,
   GetAllSourcesForCourse,
   CreateNewModule,
+  GetBasePath,
+  CreateNewExercise,
 } from "../../Api";
 import TextField from "../TextField";
 import CourseContainer from "../CourseContainer";
@@ -37,6 +39,8 @@ const AdminPage = () => {
   const [creatingModule, setCreatingModule] = useState(false);
   const [sources, setSources] = useState(null);
   const [modules, setModules] = useState(null);
+  const [difficultySettings, setDifficultySettings] = useState(null);
+  const [exercise, setExercise] = useState(null);
 
   const cookies = new Cookies();
   const navigate = useNavigate();
@@ -126,6 +130,7 @@ const AdminPage = () => {
                       setModules(null);
                       setSource(null);
                       setModule(null);
+                      setDifficultySettings(null);
                       setSettingModule(false);
                       setCreatingNewSource(false);
                     }}
@@ -273,7 +278,7 @@ const AdminPage = () => {
                       width={20}
                       allowMultipleSettings={false}
                       onChangedDifficultySetting={(difficultySettings) => {
-                        console.log(difficultySettings);
+                        setDifficultySettings(difficultySettings);
                       }}
                     />
                     <Spacing Height={"1.2rem"} />
@@ -314,6 +319,22 @@ const AdminPage = () => {
                   </ComponentContainer>
                   <ComponentContainer>
                     <ThinButton
+                      onClick={async () => {
+                        let id = await HandleSave(
+                          source,
+                          difficultySettings,
+                          module,
+                          exercise,
+                          setExercise
+                        );
+                        window.location =
+                          "tentap:" +
+                          JSON.stringify({
+                            exerciseId: id,
+                            apiUrl: GetBasePath(),
+                            token: userInfo.token,
+                          });
+                      }}
                       Color={Color.Cyan}
                       TextColor={Color.Dark}
                       Width={"20rem"}
@@ -325,6 +346,19 @@ const AdminPage = () => {
                       Color={Color.Green}
                       TextColor={Color.Dark}
                       Width={"20rem"}
+                      onClick={async () => {
+                        if (
+                          (await HandleSave(
+                            source,
+                            difficultySettings,
+                            module,
+                            exercise,
+                            setExercise
+                          )) !== 0
+                        ) {
+                          console.log("Uppgift sparades");
+                        }
+                      }}
                     >
                       Spara uppgift
                     </ThinButton>
@@ -338,6 +372,53 @@ const AdminPage = () => {
     </CenterScreen>
   );
 };
+
+async function HandleSave(
+  source,
+  difficultySettings,
+  module,
+  exercise,
+  setExercise
+) {
+  if (module === null) {
+    alert("Du måste välja modul först");
+    return;
+  }
+  if (source === null) {
+    alert("Du måste välja tenta först"); //should never be able to get here but check anyway
+    return;
+  }
+  if (
+    difficultySettings === null ||
+    GetSingleDifficulty(difficultySettings) === 0
+  ) {
+    alert("Du måste välja svårhetsgrad först");
+    return;
+  }
+
+  let response = await CreateNewExercise(
+    exercise ? exercise.id : undefined,
+    GetSingleDifficulty(difficultySettings),
+    source.id,
+    module.id
+  );
+
+  if (response.status === 200) {
+    let json = await response.json();
+    setExercise(json);
+    return json.id;
+  } else {
+    alert("Fel när övning skulle skapas");
+    return 0;
+  }
+}
+
+function GetSingleDifficulty(difficultySettings) {
+  for (let i = 0; i < difficultySettings.length; i++) {
+    if (difficultySettings[i]) return i + 1;
+  }
+  return 0;
+}
 
 const CornerMenu = styled.div`
   position: absolute;

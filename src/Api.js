@@ -58,6 +58,20 @@ export async function CreateNewCourse(name, code) {
   });
 }
 
+export async function CreateNewExercise(id, difficulty, sourceId, moduleId) {
+  const cookies = new Cookies();
+  const userInfo = cookies.get("userInfo");
+
+  return await fetch(GetBasePath() + "admin/exercise/create", {
+    method: "POST",
+    body: JSON.stringify({ id, difficulty, sourceId, moduleId }),
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + userInfo.token,
+    },
+  });
+}
+
 export async function GetAllModulesForCourse(courseId) {
   return await fetch(
     GetBasePath() + "course/getModulesByCourseId?courseId=" + courseId
@@ -74,7 +88,7 @@ export async function GetAllCourses() {
   return await fetch(GetBasePath() + "course/getall");
 }
 
-function GetBasePath() {
+export function GetBasePath() {
   let requestPath = "https://ledigasalar.online/tentap/";
   if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
     //use local address if development
