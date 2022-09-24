@@ -13,13 +13,16 @@ import {
   CreateNewCourse,
   CreateNewSource,
   GetAllCourses,
+  GetAllModulesForCourse,
   GetAllSourcesForCourse,
+  CreateNewModule,
 } from "../../Api";
 import TextField from "../TextField";
 import CourseContainer from "../CourseContainer";
 import SourceContainer from "../SourceContainer";
 import DifficultySelection from "../DifficultySelection";
 import SquareImageButton from "../SquareImageButton";
+import ModuleContainer from "../ModuleContainer";
 
 const AdminPage = () => {
   const [course, setCourse] = useState(null);
@@ -29,7 +32,11 @@ const AdminPage = () => {
   const [coursesSearchText, setCoursesSearchText] = useState("");
   const [creatingNewCourse, setCreatingNewCourse] = useState(false);
   const [creatingNewSource, setCreatingNewSource] = useState(false);
+  const [module, setModule] = useState(null);
+  const [settingModule, setSettingModule] = useState(false);
+  const [creatingModule, setCreatingModule] = useState(false);
   const [sources, setSources] = useState(null);
+  const [modules, setModules] = useState(null);
 
   const cookies = new Cookies();
   const navigate = useNavigate();
@@ -48,16 +55,37 @@ const AdminPage = () => {
 
     async function FetchSources() {
       let response = await GetAllSourcesForCourse(course.id);
-      console.log(response.status);
       setSources(await response.json());
+    }
+
+    async function FetchModules() {
+      let response = await GetAllModulesForCourse(course.id);
+      console.log(response.status);
+      setModules(await response.json());
     }
 
     if (courses === null) FetchCourses();
     if (course !== null && sources === null) FetchSources();
-  }, [navigate, isLoggedIn, coursesSearchText, courses, sources, course]);
+    if (course !== null && modules === null) FetchModules();
+  }, [
+    navigate,
+    isLoggedIn,
+    coursesSearchText,
+    courses,
+    sources,
+    course,
+    modules,
+  ]);
 
   return (
     <CenterScreen>
+      <CornerMenu>
+        <Link to={"/me"}>
+          <ThinButton Width={"7rem"} Color={Color.Red} TextColor={Color.Dark}>
+            Tillbaka
+          </ThinButton>
+        </Link>
+      </CornerMenu>
       <SectionsMainContainer>
         <AdminSection>
           <ComponentContainer>
@@ -95,6 +123,10 @@ const AdminPage = () => {
                     courseSelected={(courseId) => {
                       setCourse(courses.find((x) => x.id === courseId));
                       setSources(null);
+                      setModules(null);
+                      setSource(null);
+                      setModule(null);
+                      setSettingModule(false);
                       setCreatingNewSource(false);
                     }}
                     createCourse={() => {
@@ -106,18 +138,6 @@ const AdminPage = () => {
                 )}
               </>
             ) : null}
-          </ComponentContainer>
-          <ComponentContainer>
-            <Spacing Height={"2.2rem"} />
-            <Link to={"/me"}>
-              <ThinButton
-                Width={"20rem"}
-                Color={Color.Red}
-                TextColor={Color.Dark}
-              >
-                Tillbaka
-              </ThinButton>
-            </Link>
           </ComponentContainer>
         </AdminSection>
         {course === null ? (
@@ -156,6 +176,7 @@ const AdminPage = () => {
                     if (createResult.status === 200) {
                       setCreatingNewSource(false);
                       setSources(null);
+                      setModules(null);
                     }
                   }}
                 />
@@ -166,6 +187,8 @@ const AdminPage = () => {
                       width={20}
                       sourceSelected={(sourceId) => {
                         setSource(sources.find((x) => x.id === sourceId));
+                        setSettingModule(false);
+                        setCreatingModule(false);
                       }}
                       createSource={() => {
                         setCreatingNewSource(true);
@@ -190,59 +213,124 @@ const AdminPage = () => {
             </AdminSection>
           ) : (
             <AdminSection>
-              <ComponentContainer>
-                <SubHeader>
-                  {source.author + " " + source.date.split("T")[0]}
-                </SubHeader>
-                <Spacing Height={"2.2rem"} />
-                <BodyText>Svårhetsgrad</BodyText>
-                <Spacing Height={"0.5rem"} />
-                <DifficultySelection
-                  width={20}
-                  allowMultipleSettings={false}
-                  onChangedDifficultySetting={(difficultySettings) => {
-                    console.log(difficultySettings);
-                  }}
-                />
-                <Spacing Height={"1.2rem"} />
-                <BodyText>Tenta</BodyText>
-                <Spacing Height={"0.5rem"} />
-                <ThickButton secondLine={source.date.split("T")[0]} width={20}>
-                  {source.author}
-                </ThickButton>
-                <Spacing Height={"1.6rem"} />
-                <SquareButtonContainers>
-                  <SquareButtonText>Problem</SquareButtonText>
-                  <SquareButtonText>Lösning</SquareButtonText>
-                </SquareButtonContainers>
-                <Spacing Height={"0.5rem"} />
-                <SquareButtonContainers>
-                  <SquareImageButton
-                    source={
-                      "https://res.cloudinary.com/tentap/image/upload/v1642018188/btoitwlkeh4ktmyqw1eo.jpg"
-                    }
-                  />
-                  <SquareImageButton />
-                </SquareButtonContainers>
-                <Spacing Height={"2.2rem"} />
-              </ComponentContainer>
-              <ComponentContainer>
-                <ThinButton
-                  Color={Color.Cyan}
-                  TextColor={Color.Dark}
-                  Width={"20rem"}
-                >
-                  Ladda upp nya bilder
-                </ThinButton>
-                <Spacing Height={"1.2rem"} />
-                <ThinButton
-                  Color={Color.Green}
-                  TextColor={Color.Dark}
-                  Width={"20rem"}
-                >
-                  Spara uppgift
-                </ThinButton>
-              </ComponentContainer>
+              <SubHeader>
+                {source.author + " " + source.date.split("T")[0]}
+              </SubHeader>
+              <Spacing Height={"2.2rem"} />
+              {settingModule ? (
+                <>
+                  {creatingModule ? (
+                    <CreateNewModuleModule
+                      onCancel={() => {
+                        setCreatingModule(false);
+                      }}
+                      onCreate={async (newModuleName) => {
+                        let createResult = await CreateNewModule(
+                          course.id,
+                          newModuleName
+                        );
+                        if (createResult.status === 200) {
+                          setCreatingModule(false);
+                          setModules(null);
+                        }
+                      }}
+                    />
+                  ) : (
+                    <>
+                      {modules === null ? null : (
+                        <>
+                          <ModuleContainer
+                            width={20}
+                            moduleSelected={(moduleId) => {
+                              setModule(modules.find((x) => x.id === moduleId));
+                              setSettingModule(false);
+                            }}
+                            createModule={() => {
+                              setCreatingModule(true);
+                            }}
+                            modules={modules}
+                          />
+                          <ThinButton
+                            onClick={() => {
+                              setSettingModule(false);
+                            }}
+                            TextColor={Color.Dark}
+                            Color={Color.Red}
+                          >
+                            Avbryt
+                          </ThinButton>
+                        </>
+                      )}
+                    </>
+                  )}
+                </>
+              ) : (
+                <>
+                  <ComponentContainer>
+                    <BodyText>Svårhetsgrad</BodyText>
+                    <Spacing Height={"0.5rem"} />
+                    <DifficultySelection
+                      width={20}
+                      allowMultipleSettings={false}
+                      onChangedDifficultySetting={(difficultySettings) => {
+                        console.log(difficultySettings);
+                      }}
+                    />
+                    <Spacing Height={"1.2rem"} />
+                    <BodyText>Tenta</BodyText>
+                    <Spacing Height={"0.5rem"} />
+                    <ThickButton
+                      secondLine={source.date.split("T")[0]}
+                      width={20}
+                    >
+                      {source.author}
+                    </ThickButton>
+                    <Spacing Height={"1.2rem"} />
+                    <BodyText>Modul</BodyText>
+                    <Spacing Height={"0.5rem"} />
+                    <ThickButton
+                      onClick={() => {
+                        setSettingModule(true);
+                      }}
+                      width={20}
+                    >
+                      {module === null ? "(Tryck för att välja)" : module.name}
+                    </ThickButton>
+                    <Spacing Height={"1.6rem"} />
+                    <SquareButtonContainers>
+                      <SquareButtonText>Problem</SquareButtonText>
+                      <SquareButtonText>Lösning</SquareButtonText>
+                    </SquareButtonContainers>
+                    <Spacing Height={"0.5rem"} />
+                    <SquareButtonContainers>
+                      <SquareImageButton
+                        source={
+                          "https://res.cloudinary.com/tentap/image/upload/v1642018188/btoitwlkeh4ktmyqw1eo.jpg"
+                        }
+                      />
+                      <SquareImageButton />
+                    </SquareButtonContainers>
+                    <Spacing Height={"2.2rem"} />
+                  </ComponentContainer>
+                  <ComponentContainer>
+                    <ThinButton
+                      Color={Color.Cyan}
+                      TextColor={Color.Dark}
+                      Width={"20rem"}
+                    >
+                      Ladda upp nya bilder
+                    </ThinButton>
+                    <Spacing Height={"1.2rem"} />
+                    <ThinButton
+                      Color={Color.Green}
+                      TextColor={Color.Dark}
+                      Width={"20rem"}
+                    >
+                      Spara uppgift
+                    </ThinButton>
+                  </ComponentContainer>
+                </>
+              )}
             </AdminSection>
           )}
         </AdminSection>
@@ -251,12 +339,57 @@ const AdminPage = () => {
   );
 };
 
+const CornerMenu = styled.div`
+  position: absolute;
+  left: 4rem;
+  top: 4rem;
+`;
+
+const CreateNewModuleModule = ({ onCancel, onCreate }) => {
+  const [newModuleName, setNewModuleName] = useState("");
+
+  return (
+    <CreateNewDiv>
+      <Spacing Height={"0.9rem"} />
+      <TextField
+        width={18}
+        setState={setNewModuleName}
+        title={"Modulnamn:"}
+        placeHolder={"Namn på modulen"}
+      />
+      <Spacing Height={"1rem"} />
+      <ThinButton
+        Color={Color.Cyan}
+        TextColor={Color.Dark}
+        onClick={async () => {
+          if (newModuleName !== "") {
+            await onCreate(newModuleName);
+          }
+        }}
+      >
+        Skapa
+      </ThinButton>
+      <Spacing Height={"1rem"} />
+      <ThinButton
+        Color={Color.Red}
+        TextColor={Color.Dark}
+        onClick={() => {
+          onCancel();
+        }}
+      >
+        Avbryt
+      </ThinButton>
+      <Spacing Height={"1.2rem"} />
+    </CreateNewDiv>
+  );
+};
+
 const CreateNewSourceModule = ({ onCancel, onCreate }) => {
   const [newSourceAuthor, setNewSourceAuthor] = useState("");
   const [newSourceDate, setNewSourceDate] = useState("");
 
   return (
-    <CreateNewCourseModuleDiv>
+    <CreateNewDiv>
       <Spacing Height={"0.9rem"} />
       <TextField
         width={18}
@@ -294,7 +427,7 @@ const CreateNewSourceModule = ({ onCancel, onCreate }) => {
         Avbryt
       </ThinButton>
       <Spacing Height={"1.2rem"} />
-    </CreateNewCourseModuleDiv>
+    </CreateNewDiv>
   );
 };
 
@@ -303,7 +436,7 @@ const CreateNewCourseModule = ({ onCancel, onCreate }) => {
   const [newCourseCode, setNewCourseCode] = useState("");
 
   return (
-    <CreateNewCourseModuleDiv>
+    <CreateNewDiv>
       <Spacing Height={"0.9rem"} />
       <TextField
         width={18}
@@ -341,7 +474,7 @@ const CreateNewCourseModule = ({ onCancel, onCreate }) => {
         Avbryt
       </ThinButton>
       <Spacing Height={"1.2rem"} />
-    </CreateNewCourseModuleDiv>
+    </CreateNewDiv>
   );
 };
 
@@ -357,7 +490,7 @@ const SquareButtonContainers = styled.div`
   width: 20rem;
 `;
 
-const CreateNewCourseModuleDiv = styled.div`
+const CreateNewDiv = styled.div`
   width: 20rem;
   background-color: ${Color.FadedBlue};
   background-color: rgb(0, 0, 0, 0.15);

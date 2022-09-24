@@ -3,27 +3,33 @@ import { Color, BorderRadius } from "./Constants";
 import Spacing from "./Spacing";
 import ThickButton from "./ThickButton";
 
-const CourseContainer = ({ courses, courseSelected, createCourse, width }) => {
-  if (!courseSelected)
+const ModuleContainer = ({
+  modules,
+  moduleSelected,
+  createModule,
+  width,
+  maxHeight,
+}) => {
+  if (!moduleSelected)
     console.error(
-      "Course container should have courseSelected property as a function!!"
+      "ModuleContainer should have moduleSelected property as a function!!"
     );
 
-  const displayCourses = [...courses];
+  const displayModules = [...modules];
 
-  if (createCourse)
-    displayCourses.push({ id: -1, name: "Skapa ny", code: "+" });
+  if (createModule)
+    displayModules.push({ id: -1, name: "Skapa ny", code: "+" });
 
   return (
-    <CourseContainerDiv>
-      {displayCourses.map((course) => {
+    <ModuleContainerDiv maxHeight={maxHeight}>
+      {displayModules.map((course) => {
         return (
           <div key={course.id}>
             {course.id !== -1 ? (
               <ThickButton
                 width={width}
                 onClick={() => {
-                  courseSelected(course.id);
+                  moduleSelected(course.id);
                 }}
                 key={course.code}
                 secondLine={course.code}
@@ -36,7 +42,7 @@ const CourseContainer = ({ courses, courseSelected, createCourse, width }) => {
                 Color={Color.Cyan}
                 TextColor={Color.Dark}
                 onClick={() => {
-                  createCourse();
+                  createModule();
                 }}
                 key={course.code}
                 secondLine={course.code}
@@ -48,15 +54,15 @@ const CourseContainer = ({ courses, courseSelected, createCourse, width }) => {
           </div>
         );
       })}
-    </CourseContainerDiv>
+    </ModuleContainerDiv>
   );
 };
 
-const CourseContainerDiv = styled.div`
+const ModuleContainerDiv = styled.div`
   min-height: 2rem;
   min-width: 2rem;
   height: 100%;
-  max-height: 40rem;
+  max-height: ${(props) => props.maxHeight + "rem"};
   overflow: visible;
   overflow-y: auto;
   width: 22rem;
@@ -69,4 +75,4 @@ const CourseContainerDiv = styled.div`
   }
 `;
 
-export default CourseContainer;
+export default ModuleContainer;

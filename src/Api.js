@@ -30,6 +30,20 @@ export async function CreateNewSource(courseId, author, date) {
   });
 }
 
+export async function CreateNewModule(courseId, name) {
+  const cookies = new Cookies();
+  const userInfo = cookies.get("userInfo");
+
+  return await fetch(GetBasePath() + "admin/module/create", {
+    method: "POST",
+    body: JSON.stringify({ courseId, moduleName: name }),
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + userInfo.token,
+    },
+  });
+}
+
 export async function CreateNewCourse(name, code) {
   const cookies = new Cookies();
   const userInfo = cookies.get("userInfo");
@@ -42,6 +56,12 @@ export async function CreateNewCourse(name, code) {
       Authorization: "Bearer " + userInfo.token,
     },
   });
+}
+
+export async function GetAllModulesForCourse(courseId) {
+  return await fetch(
+    GetBasePath() + "course/getModulesByCourseId?courseId=" + courseId
+  );
 }
 
 export async function GetAllSourcesForCourse(courseId) {
