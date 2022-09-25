@@ -58,6 +58,19 @@ export async function CreateNewCourse(name, code) {
   });
 }
 
+export async function ActivateExercise(id) {
+  const cookies = new Cookies();
+  const userInfo = cookies.get("userInfo");
+
+  return await fetch(GetBasePath() + "admin/exercise/activate?id=" + id, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + userInfo.token,
+    },
+  });
+}
+
 export async function CreateNewExercise(id, difficulty, sourceId, moduleId) {
   const cookies = new Cookies();
   const userInfo = cookies.get("userInfo");
@@ -81,6 +94,16 @@ export async function GetExerciseById(exerciseId) {
 export async function GetAllModulesForCourse(courseId) {
   return await fetch(
     GetBasePath() + "course/getModulesByCourseId?courseId=" + courseId
+  );
+}
+
+export async function GetAllExercisesForCourse(courseId, onlyInactive) {
+  return await fetch(
+    GetBasePath() +
+      "course/exercise/getAll?courseId=" +
+      courseId +
+      "&onlyInactive=" +
+      onlyInactive
   );
 }
 
