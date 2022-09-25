@@ -3,40 +3,41 @@ import { Color, BorderRadius } from "./Constants";
 import Spacing from "./Spacing";
 import ThickButton from "./ThickButton";
 
-const SourceContainer = ({
-  sources,
-  sourceSelected,
-  createSource,
+const ExerciseContainer = ({
+  exercises,
+  exerciseSelected,
+  createExercise,
   width,
   height,
 }) => {
-  if (!sourceSelected)
+  if (!exerciseSelected)
     console.error(
-      "Source container should have sourceSelected property as a function!!"
+      "Exercise container should have exerciseSelected property as a function!!"
     );
 
-  const displayCourses = [...sources];
+  const displayExercises = [...exercises];
 
-  if (createSource)
-    displayCourses.push({ id: -1, author: "Skapa ny", date: "+" });
+  if (createExercise) displayExercises.push({ id: -1 });
 
   return (
-    <SourceContainerDiv maxHeight={height}>
-      {displayCourses.map((course) => {
+    <ExerciseContainerDiv maxHeight={height}>
+      {displayExercises.map((exercise) => {
         return (
-          <div key={course.id}>
-            {course.id !== -1 ? (
+          <div key={exercise.id}>
+            {exercise.id !== -1 ? (
               <ThickButton
                 Color={Color.Blue}
                 TextColor={Color.White}
                 width={width}
                 onClick={() => {
-                  sourceSelected(course.id);
+                  exerciseSelected(exercise.id);
                 }}
-                key={course.id}
-                secondLine={course.date.split("T")[0]}
+                key={exercise.id}
+                secondLine={
+                  "#" + exercise.id + " " + exercise.source.date.split("T")[0]
+                }
               >
-                {course.author}
+                {exercise.source.author}
               </ThickButton>
             ) : (
               <ThickButton
@@ -44,23 +45,23 @@ const SourceContainer = ({
                 Color={Color.Cyan}
                 TextColor={Color.Dark}
                 onClick={() => {
-                  createSource();
+                  createExercise();
                 }}
-                key={course.id}
-                secondLine={course.date}
+                key={exercise.id}
+                secondLine={"+"}
               >
-                {course.author}
+                Skapa ny
               </ThickButton>
             )}
             <Spacing Height={"1rem"} />
           </div>
         );
       })}
-    </SourceContainerDiv>
+    </ExerciseContainerDiv>
   );
 };
 
-const SourceContainerDiv = styled.div`
+const ExerciseContainerDiv = styled.div`
   min-height: 2rem;
   min-width: 2rem;
   height: 100%;
@@ -78,4 +79,4 @@ const SourceContainerDiv = styled.div`
   }
 `;
 
-export default SourceContainer;
+export default ExerciseContainer;

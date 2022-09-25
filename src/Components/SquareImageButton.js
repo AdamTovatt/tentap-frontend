@@ -2,7 +2,6 @@ import styled from "styled-components";
 import { Color, BorderRadius } from "./Constants";
 
 const SquareImageButton = ({ source, onClick }) => {
-  console.log(source);
   return (
     <ButtonHtml onClick={onClick}>
       {source && source.length > 0 ? (

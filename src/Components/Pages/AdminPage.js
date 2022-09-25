@@ -19,6 +19,7 @@ import {
   GetBasePath,
   CreateNewExercise,
   GetExerciseById,
+  GetAllExercisesForCourse,
 } from "../../Api";
 import TextField from "../TextField";
 import CourseContainer from "../CourseContainer";
@@ -26,6 +27,7 @@ import SourceContainer from "../SourceContainer";
 import DifficultySelection from "../DifficultySelection";
 import SquareImageButton from "../SquareImageButton";
 import ModuleContainer from "../ModuleContainer";
+import ExerciseContainer from "../ExerciseContainer";
 
 const AdminPage = () => {
   const [course, setCourse] = useState(null);
@@ -35,6 +37,7 @@ const AdminPage = () => {
   const [coursesSearchText, setCoursesSearchText] = useState("");
   const [creatingNewCourse, setCreatingNewCourse] = useState(false);
   const [creatingNewSource, setCreatingNewSource] = useState(false);
+  const [settingSource, setSettingsSource] = useState(false);
   const [module, setModule] = useState(null);
   const [settingModule, setSettingModule] = useState(false);
   const [creatingModule, setCreatingModule] = useState(false);
@@ -42,6 +45,7 @@ const AdminPage = () => {
   const [modules, setModules] = useState(null);
   const [difficultySettings, setDifficultySettings] = useState(null);
   const [exercise, setExercise] = useState(null);
+  const [exercises, setExercises] = useState(null);
 
   const cookies = new Cookies();
   const navigate = useNavigate();
@@ -65,13 +69,22 @@ const AdminPage = () => {
 
     async function FetchModules() {
       let response = await GetAllModulesForCourse(course.id);
-      console.log(response.status);
       setModules(await response.json());
+    }
+
+    async function FetchExercises() {
+      let response = await GetAllExercisesForCourse(course.id, false);
+      if (response.status === 200) {
+        setExercises(await response.json());
+      } else {
+        setExercises([]);
+      }
     }
 
     if (courses === null) FetchCourses();
     if (course !== null && sources === null) FetchSources();
     if (course !== null && modules === null) FetchModules();
+    if (course !== null && exercises === null) FetchExercises();
   }, [
     navigate,
     isLoggedIn,
@@ -81,6 +94,7 @@ const AdminPage = () => {
     course,
     modules,
     exercise,
+    exercises,
   ]);
 
   return (
@@ -132,6 +146,7 @@ const AdminPage = () => {
                       setModules(null);
                       setSource(null);
                       setModule(null);
+                      setExercises(null);
                       setDifficultySettings(null);
                       setSettingModule(false);
                       setCreatingNewSource(false);
@@ -147,83 +162,48 @@ const AdminPage = () => {
             ) : null}
           </ComponentContainer>
         </AdminSection>
-        {course === null ? (
-          <AdminSection>
-            <LockedSection>
-              <LockedText>
-                Här visas tentor när du har valt en kurs till vänster
-              </LockedText>
-            </LockedSection>
-          </AdminSection>
-        ) : (
-          <AdminSection>
-            <ComponentContainer>
-              <SubHeader>{course.name}</SubHeader>
-              <Spacing Height={"2.2rem"} />
-              <TextField
-                setState={setCoursesSearchText}
-                title={"Sök:"}
-                placeHolder={"Kursnamn eller kod..."}
-                width={20}
-              ></TextField>
-              <Spacing Height={"2.2rem"} />
-            </ComponentContainer>
-            <ComponentContainer>
-              {creatingNewSource ? (
-                <CreateNewSourceModule
-                  onCancel={() => {
-                    setCreatingNewSource(false);
-                  }}
-                  onCreate={async (author, sourceDate) => {
-                    let createResult = await CreateNewSource(
-                      course.id,
-                      author,
-                      sourceDate
-                    );
-                    if (createResult.status === 200) {
-                      setCreatingNewSource(false);
-                      setSources(null);
-                      setModules(null);
-                    }
-                  }}
-                />
-              ) : (
-                <>
-                  {sources === null ? null : (
-                    <SourceContainer
-                      width={20}
-                      sourceSelected={(sourceId) => {
-                        setSource(sources.find((x) => x.id === sourceId));
-                        setSettingModule(false);
-                        setCreatingModule(false);
-                      }}
-                      createSource={() => {
-                        setCreatingNewSource(true);
-                      }}
-                      sources={sources}
-                    />
-                  )}
-                </>
-              )}
-            </ComponentContainer>
-          </AdminSection>
-        )}
         <AdminSection>
-          {source === null ? (
+          {course ? (
+            <>
+              <SubHeader>Skapa eller välj en uppgift</SubHeader>
+              <Spacing Height={"2.2rem"} />
+              <ExerciseContainer
+                width={20}
+                height={45}
+                exerciseSelected={(exerciseId) => {
+                  let exercise = exercises.find((x) => x.id === exerciseId);
+                  setExercise(exercise);
+                  setSource(exercise.source);
+                  setModule(exercise.module);
+
+                  if (exercise.difficulty > 0) {
+                    let difficultyArray = [false, false, false];
+                    difficultyArray[exercise.difficulty - 1] = true;
+                    setDifficultySettings(difficultyArray);
+                  }
+                }}
+                createExercise={() => {
+                  setExercise(null);
+                  setSource(null);
+                }}
+                exercises={exercises ? exercises : []}
+              />
+            </>
+          ) : (
+            <LockedSection>
+              <LockedText>Här kan du redigera en uppgift</LockedText>
+            </LockedSection>
+          )}
+        </AdminSection>
+        <AdminSection>
+          {course === null ? (
             <AdminSection>
               <LockedSection>
-                <LockedText>
-                  Här kan du skapa en uppgift när du valt kurs och tenta till
-                  vänster
-                </LockedText>
+                <LockedText>Här kan du redigera en uppgift</LockedText>
               </LockedSection>
             </AdminSection>
           ) : (
             <AdminSection>
-              <SubHeader>
-                {source.author + " " + source.date.split("T")[0]}
-              </SubHeader>
-              <Spacing Height={"2.2rem"} />
               {settingModule ? (
                 <>
                   {creatingModule ? (
@@ -258,6 +238,7 @@ const AdminPage = () => {
                             modules={modules}
                           />
                           <ThinButton
+                            Width={"20rem"}
                             onClick={() => {
                               setSettingModule(false);
                             }}
@@ -273,128 +254,208 @@ const AdminPage = () => {
                 </>
               ) : (
                 <>
-                  <ComponentContainer>
-                    <BodyText>Svårhetsgrad</BodyText>
-                    <Spacing Height={"0.5rem"} />
-                    <DifficultySelection
-                      width={20}
-                      allowMultipleSettings={false}
-                      onChangedDifficultySetting={(difficultySettings) => {
-                        setDifficultySettings(difficultySettings);
-                      }}
-                    />
-                    <Spacing Height={"1.2rem"} />
-                    <BodyText>Tenta</BodyText>
-                    <Spacing Height={"0.5rem"} />
-                    <ThickButton
-                      secondLine={source.date.split("T")[0]}
-                      width={20}
-                    >
-                      {source.author}
-                    </ThickButton>
-                    <Spacing Height={"1.2rem"} />
-                    <BodyText>Modul</BodyText>
-                    <Spacing Height={"0.5rem"} />
-                    <ThickButton
-                      onClick={() => {
-                        setSettingModule(true);
-                      }}
-                      width={20}
-                    >
-                      {module === null ? "(Tryck för att välja)" : module.name}
-                    </ThickButton>
-                    <Spacing Height={"1.6rem"} />
-                    <SquareButtonContainers>
-                      <SquareButtonText>Problem</SquareButtonText>
-                      <SquareButtonText>Lösning</SquareButtonText>
-                    </SquareButtonContainers>
-                    <Spacing Height={"0.5rem"} />
-                    <SquareButtonContainers>
-                      <SquareImageButton
-                        onClick={async () => {
-                          if (exercise) {
-                            let result = await GetExerciseById(exercise.id);
-                            let json = await result.json();
-                            setExercise(json);
-                            if (result.status === 200) {
-                            } else {
-                              console.log("Fel när övning skulle hämtas");
+                  {settingSource ? (
+                    <>
+                      <ComponentContainer>
+                        <TextField
+                          setState={setCoursesSearchText}
+                          title={"Sök:"}
+                          placeHolder={"Kursnamn eller kod..."}
+                          width={20}
+                        ></TextField>
+                        <Spacing Height={"2.2rem"} />
+                      </ComponentContainer>
+                      <ComponentContainer>
+                        {creatingNewSource ? (
+                          <CreateNewSourceModule
+                            onCancel={() => {
+                              setCreatingNewSource(false);
+                            }}
+                            onCreate={async (author, sourceDate) => {
+                              let createResult = await CreateNewSource(
+                                course.id,
+                                author,
+                                sourceDate
+                              );
+                              if (createResult.status === 200) {
+                                setCreatingNewSource(false);
+                                setSources(null);
+                                setModules(null);
+                              }
+                            }}
+                          />
+                        ) : (
+                          <>
+                            {sources === null ? null : (
+                              <>
+                                <SourceContainer
+                                  height={35}
+                                  width={20}
+                                  sourceSelected={(sourceId) => {
+                                    setSource(
+                                      sources.find((x) => x.id === sourceId)
+                                    );
+                                    setSettingModule(false);
+                                    setCreatingModule(false);
+                                    setSettingsSource(false);
+                                  }}
+                                  createSource={() => {
+                                    setCreatingNewSource(true);
+                                  }}
+                                  sources={sources}
+                                />
+                                <Spacing Height={"1.2rem"} />
+                                <ThinButton
+                                  Width={"20rem"}
+                                  onClick={() => {
+                                    setSettingsSource(false);
+                                  }}
+                                  TextColor={Color.Dark}
+                                  Color={Color.Red}
+                                >
+                                  Avbryt
+                                </ThinButton>
+                              </>
+                            )}
+                          </>
+                        )}
+                      </ComponentContainer>
+                    </>
+                  ) : (
+                    <>
+                      <ComponentContainer>
+                        <BodyText>Svårhetsgrad</BodyText>
+                        <Spacing Height={"0.5rem"} />
+                        <DifficultySelection
+                          width={20}
+                          allowMultipleSettings={false}
+                          onChangedDifficultySetting={(difficultySettings) => {
+                            setDifficultySettings(difficultySettings);
+                          }}
+                          defaultSetting={difficultySettings}
+                        />
+                        <Spacing Height={"1.2rem"} />
+                        <BodyText>Tenta</BodyText>
+                        <Spacing Height={"0.5rem"} />
+                        <ThickButton
+                          secondLine={source ? source.date.split("T")[0] : ""}
+                          width={20}
+                          onClick={() => {
+                            setSettingsSource(true);
+                          }}
+                        >
+                          {source ? source.author : "(Tryck för att välja)"}
+                        </ThickButton>
+                        <Spacing Height={"1.2rem"} />
+                        <BodyText>Modul</BodyText>
+                        <Spacing Height={"0.5rem"} />
+                        <ThickButton
+                          onClick={() => {
+                            setSettingModule(true);
+                          }}
+                          width={20}
+                        >
+                          {module === null
+                            ? "(Tryck för att välja)"
+                            : module.name}
+                        </ThickButton>
+                        <Spacing Height={"1.6rem"} />
+                        <SquareButtonContainers>
+                          <SquareButtonText>Problem</SquareButtonText>
+                          <SquareButtonText>Lösning</SquareButtonText>
+                        </SquareButtonContainers>
+                        <Spacing Height={"0.5rem"} />
+                        <SquareButtonContainers>
+                          <SquareImageButton
+                            onClick={async () => {
+                              if (exercise) {
+                                let result = await GetExerciseById(exercise.id);
+                                let json = await result.json();
+                                setExercise(json);
+                                if (result.status === 200) {
+                                } else {
+                                  console.log("Fel när övning skulle hämtas");
+                                }
+                              }
+                            }}
+                            source={
+                              exercise && exercise.problemImage
+                                ? exercise.problemImage.url
+                                : null
                             }
-                          }
-                        }}
-                        source={
-                          exercise && exercise.problemImage
-                            ? exercise.problemImage.url
-                            : null
-                        }
-                      />
-                      <SquareImageButton
-                        onClick={async () => {
-                          if (exercise) {
-                            let result = await GetExerciseById(exercise.id);
-                            let json = await result.json();
-                            setExercise(json);
-                            if (result.status === 200) {
-                            } else {
-                              console.log("Fel när övning skulle hämtas");
+                          />
+                          <SquareImageButton
+                            onClick={async () => {
+                              if (exercise) {
+                                let result = await GetExerciseById(exercise.id);
+                                let json = await result.json();
+                                setExercise(json);
+                                if (result.status === 200) {
+                                } else {
+                                  console.log("Fel när övning skulle hämtas");
+                                }
+                              }
+                            }}
+                            source={
+                              exercise && exercise.solutionImage
+                                ? exercise.solutionImage.url
+                                : null
                             }
-                          }
-                        }}
-                        source={
-                          exercise && exercise.solutionImage
-                            ? exercise.solutionImage.url
-                            : null
-                        }
-                      />
-                    </SquareButtonContainers>
-                    <Spacing Height={"2.2rem"} />
-                  </ComponentContainer>
-                  <ComponentContainer>
-                    <ThinButton
-                      onClick={async () => {
-                        let id = await HandleSave(
-                          source,
-                          difficultySettings,
-                          module,
-                          exercise,
-                          setExercise
-                        );
-                        window.location =
-                          "tentap:" +
-                          JSON.stringify({
-                            exerciseId: id,
-                            apiUrl: GetBasePath(),
-                            token: userInfo.token,
-                          });
-                      }}
-                      Color={Color.Cyan}
-                      TextColor={Color.Dark}
-                      Width={"20rem"}
-                    >
-                      Ladda upp nya bilder
-                    </ThinButton>
-                    <Spacing Height={"1.2rem"} />
-                    <ThinButton
-                      Color={Color.Green}
-                      TextColor={Color.Dark}
-                      Width={"20rem"}
-                      onClick={async () => {
-                        if (
-                          (await HandleSave(
-                            source,
-                            difficultySettings,
-                            module,
-                            exercise,
-                            setExercise
-                          )) !== 0
-                        ) {
-                          console.log("Uppgift sparades");
-                        }
-                      }}
-                    >
-                      Spara uppgift
-                    </ThinButton>
-                  </ComponentContainer>
+                          />
+                        </SquareButtonContainers>
+                        <Spacing Height={"2.2rem"} />
+                      </ComponentContainer>
+
+                      <ComponentContainer>
+                        <ThinButton
+                          onClick={async () => {
+                            let id = await HandleSave(
+                              source,
+                              difficultySettings,
+                              module,
+                              exercise,
+                              setExercise,
+                              setExercises
+                            );
+                            window.location =
+                              "tentap:" +
+                              JSON.stringify({
+                                exerciseId: id,
+                                apiUrl: GetBasePath(),
+                                token: userInfo.token,
+                              });
+                          }}
+                          Color={Color.Cyan}
+                          TextColor={Color.Dark}
+                          Width={"20rem"}
+                        >
+                          Ladda upp nya bilder
+                        </ThinButton>
+                        <Spacing Height={"1.2rem"} />
+                        <ThinButton
+                          Color={Color.Green}
+                          TextColor={Color.Dark}
+                          Width={"20rem"}
+                          onClick={async () => {
+                            if (
+                              (await HandleSave(
+                                source,
+                                difficultySettings,
+                                module,
+                                exercise,
+                                setExercise,
+                                setExercises
+                              )) !== 0
+                            ) {
+                              console.log("Uppgift sparades");
+                            }
+                          }}
+                        >
+                          Spara uppgift
+                        </ThinButton>
+                      </ComponentContainer>
+                    </>
+                  )}
                 </>
               )}
             </AdminSection>
@@ -410,7 +471,8 @@ async function HandleSave(
   difficultySettings,
   module,
   exercise,
-  setExercise
+  setExercise,
+  setExercises
 ) {
   if (module === null) {
     alert("Du måste välja modul först");
@@ -438,6 +500,7 @@ async function HandleSave(
   if (response.status === 200) {
     let json = await response.json();
     setExercise(json);
+    setExercises(null);
     return json.id;
   } else {
     alert("Fel när övning skulle skapas");
