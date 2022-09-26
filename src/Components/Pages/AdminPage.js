@@ -37,7 +37,7 @@ const AdminPage = () => {
   const [coursesSearchText, setCoursesSearchText] = useState("");
   const [creatingNewCourse, setCreatingNewCourse] = useState(false);
   const [creatingNewSource, setCreatingNewSource] = useState(false);
-  const [settingSource, setSettingsSource] = useState(false);
+  const [settingSource, setSettingSource] = useState(false);
   const [module, setModule] = useState(null);
   const [settingModule, setSettingModule] = useState(false);
   const [creatingModule, setCreatingModule] = useState(false);
@@ -46,6 +46,7 @@ const AdminPage = () => {
   const [difficultySettings, setDifficultySettings] = useState(null);
   const [exercise, setExercise] = useState(null);
   const [exercises, setExercises] = useState(null);
+  const [creatingNewExercise, setCreatingNewExercise] = useState(false);
 
   const cookies = new Cookies();
   const navigate = useNavigate();
@@ -147,6 +148,7 @@ const AdminPage = () => {
                       setSource(null);
                       setModule(null);
                       setExercises(null);
+                      setExercise(null);
                       setDifficultySettings(null);
                       setSettingModule(false);
                       setCreatingNewSource(false);
@@ -165,29 +167,72 @@ const AdminPage = () => {
         <AdminSection>
           {course ? (
             <>
-              <SubHeader>Skapa eller välj en uppgift</SubHeader>
-              <Spacing Height={"2.2rem"} />
-              <ExerciseContainer
-                width={20}
-                height={45}
-                exerciseSelected={(exerciseId) => {
-                  let exercise = exercises.find((x) => x.id === exerciseId);
-                  setExercise(exercise);
-                  setSource(exercise.source);
-                  setModule(exercise.module);
+              {exercise || creatingNewExercise ? (
+                <>
+                  <SubHeader>
+                    {exercise === null
+                      ? "Ny uppgift"
+                      : "Uppgift #" + exercise.id}
+                  </SubHeader>
+                  <Spacing Height={"1rem"} />
+                  <ThickButton
+                    secondLine={
+                      exercise === null
+                        ? "Datum för tentan"
+                        : source.date.split("T")[0]
+                    }
+                  >
+                    {exercise === null
+                      ? "Tentans författare"
+                      : exercise.source.author}
+                  </ThickButton>
+                  <Spacing Height={"1rem"} />
+                  <ThinButton
+                    Color={Color.Red}
+                    TextColor={Color.Dark}
+                    onClick={() => {
+                      setExercise(null);
+                      setSource(null);
+                      setModule(null);
+                      setSettingModule(false);
+                      setSettingSource(false);
+                      setCreatingNewExercise(false);
+                    }}
+                  >
+                    Tillbaka
+                  </ThinButton>
+                </>
+              ) : (
+                <>
+                  <SubHeader>Skapa eller välj en uppgift</SubHeader>
+                  <Spacing Height={"2.2rem"} />
+                  <ExerciseContainer
+                    width={20}
+                    height={45}
+                    exerciseSelected={(exerciseId) => {
+                      let exercise = exercises.find((x) => x.id === exerciseId);
+                      setExercise(exercise);
+                      setSource(exercise.source);
+                      setModule(exercise.module);
+                      setCreatingNewExercise(false);
 
-                  if (exercise.difficulty > 0) {
-                    let difficultyArray = [false, false, false];
-                    difficultyArray[exercise.difficulty - 1] = true;
-                    setDifficultySettings(difficultyArray);
-                  }
-                }}
-                createExercise={() => {
-                  setExercise(null);
-                  setSource(null);
-                }}
-                exercises={exercises ? exercises : []}
-              />
+                      if (exercise.difficulty > 0) {
+                        let difficultyArray = [false, false, false];
+                        difficultyArray[exercise.difficulty - 1] = true;
+                        setDifficultySettings(difficultyArray);
+                      }
+                    }}
+                    createExercise={() => {
+                      setExercise(null);
+                      setSource(null);
+                      setModule(null);
+                      setDifficultySettings([true, false, false]);
+                      setCreatingNewExercise(true);
+                    }}
+                    exercises={exercises ? exercises : []}
+                  />
+                </>
+              )}
             </>
           ) : (
             <LockedSection>
@@ -196,7 +241,7 @@ const AdminPage = () => {
           )}
         </AdminSection>
         <AdminSection>
-          {course === null ? (
+          {course === null || (exercise === null && !creatingNewExercise) ? (
             <AdminSection>
               <LockedSection>
                 <LockedText>Här kan du redigera en uppgift</LockedText>
@@ -297,7 +342,7 @@ const AdminPage = () => {
                                     );
                                     setSettingModule(false);
                                     setCreatingModule(false);
-                                    setSettingsSource(false);
+                                    setSettingSource(false);
                                   }}
                                   createSource={() => {
                                     setCreatingNewSource(true);
@@ -308,7 +353,7 @@ const AdminPage = () => {
                                 <ThinButton
                                   Width={"20rem"}
                                   onClick={() => {
-                                    setSettingsSource(false);
+                                    setSettingSource(false);
                                   }}
                                   TextColor={Color.Dark}
                                   Color={Color.Red}
@@ -341,7 +386,7 @@ const AdminPage = () => {
                           secondLine={source ? source.date.split("T")[0] : ""}
                           width={20}
                           onClick={() => {
-                            setSettingsSource(true);
+                            setSettingSource(true);
                           }}
                         >
                           {source ? source.author : "(Tryck för att välja)"}
