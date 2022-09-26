@@ -20,6 +20,8 @@ import {
   CreateNewExercise,
   GetExerciseById,
   GetAllExercisesForCourse,
+  DeleteExercise,
+  ActivateExercise,
 } from "../../Api";
 import TextField from "../TextField";
 import CourseContainer from "../CourseContainer";
@@ -169,24 +171,84 @@ const AdminPage = () => {
             <>
               {exercise || creatingNewExercise ? (
                 <>
-                  <SubHeader>
-                    {exercise === null
-                      ? "Ny uppgift"
-                      : "Uppgift #" + exercise.id}
-                  </SubHeader>
-                  <Spacing Height={"1rem"} />
-                  <ThickButton
-                    secondLine={
-                      exercise === null
-                        ? "Datum för tentan"
-                        : source.date.split("T")[0]
-                    }
-                  >
-                    {exercise === null
-                      ? "Tentans författare"
-                      : exercise.source.author}
-                  </ThickButton>
-                  <Spacing Height={"1rem"} />
+                  {exercise === null ? (
+                    <>
+                      <SubHeader>Ny uppgift</SubHeader>
+                      <Spacing Height={"1rem"} />
+                      <BodyText width={18}>
+                        Skapa en uppgift till höger och spara den för att få mer
+                        alternativ här
+                      </BodyText>
+                      <Spacing Height={"2rem"} />
+                    </>
+                  ) : (
+                    <>
+                      <SubHeader>{"Uppgift #" + exercise.id}</SubHeader>
+                      <Spacing Height={"1rem"} />
+                      <ThickButton secondLine={source.date.split("T")[0]}>
+                        {exercise.source.author}
+                      </ThickButton>
+                      <Spacing Height={"1rem"} />
+                      {!exercise.isActive ? (
+                        <ThinButton
+                          Color={Color.Cyan}
+                          TextColor={Color.Dark}
+                          onClick={async () => {
+                            let result = await ActivateExercise(exercise.id);
+
+                            if (result.status === 200) {
+                              let newExercise = exercise;
+                              newExercise.isActive = true;
+                              setExercise(newExercise);
+                            }
+                          }}
+                        >
+                          Aktivera uppgift
+                        </ThinButton>
+                      ) : (
+                        <ThinButton
+                          Color={Color.Blue}
+                          TextColor={Color.White}
+                          onClick={async () => {
+                            let result = await ActivateExercise(exercise.id);
+
+                            if (result.status === 200) {
+                              let newExercise = exercise;
+                              newExercise.isActive = true;
+                              setExercise(newExercise);
+                            }
+                          }}
+                        >
+                          Avaktivera uppgift
+                        </ThinButton>
+                      )}
+                      <Spacing Height={"1rem"} />
+                      <ThinButton
+                        Color={Color.Red}
+                        TextColor={Color.Dark}
+                        onClick={async () => {
+                          let result = await DeleteExercise(exercise.id);
+                          if (result.status === 200) {
+                            setExercise(null);
+                            setModule(null);
+                            setSource(null);
+                            setDifficultySettings([true, false, false]);
+                            setExercises(null);
+                          } else {
+                            alert(
+                              "Fel när övning skulle raderas: " +
+                                (await result.json())
+                            );
+                          }
+                        }}
+                      >
+                        ! Radera uppgift !
+                      </ThinButton>
+                      <Spacing Height={"2.5rem"} />
+                    </>
+                  )}
+                  <HorizontalLine></HorizontalLine>
+                  <Spacing Height={"2rem"} />
                   <ThinButton
                     Color={Color.Red}
                     TextColor={Color.Dark}
@@ -750,7 +812,7 @@ const LockedText = styled.div`
 const BodyText = styled.div`
   font-size: 1rem;
   color: ${Color.White};
-  max-width: 32rem;
+  max-width: ${(props) => (props.width ? props.width + "rem" : "32rem")};
   font-weight: 500;
 
   @media (max-width: 640px) {

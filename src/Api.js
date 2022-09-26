@@ -85,6 +85,19 @@ export async function CreateNewExercise(id, difficulty, sourceId, moduleId) {
   });
 }
 
+export async function DeleteExercise(id) {
+  const cookies = new Cookies();
+  const userInfo = cookies.get("userInfo");
+
+  return await fetch(GetBasePath() + "admin/exercise/remove?id=" + id, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + userInfo.token,
+    },
+  });
+}
+
 export async function GetExerciseById(exerciseId) {
   return await fetch(
     GetBasePath() + "course/exercise/get?exerciseId=" + exerciseId
