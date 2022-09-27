@@ -37,6 +37,7 @@ const ExerciseContainer = ({
                   "#" + exercise.id + " " + exercise.source.date.split("T")[0]
                 }
               >
+                {exercise.isActive ? "" : "(Inaktiv) "}
                 {exercise.source.author}
               </ThickButton>
             ) : (

@@ -28,6 +28,7 @@ const CourseContainer = ({ courses, courseSelected, createCourse, width }) => {
                 key={course.code}
                 secondLine={course.code}
               >
+                {course.active ? "" : "(Inaktiv) "}
                 {course.name}
               </ThickButton>
             ) : (
