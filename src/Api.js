@@ -58,6 +58,19 @@ export async function CreateNewCourse(name, code) {
   });
 }
 
+export async function ActivateCourse(id) {
+  const cookies = new Cookies();
+  const userInfo = cookies.get("userInfo");
+
+  return await fetch(GetBasePath() + "admin/course/activate?id=" + id, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + userInfo.token,
+    },
+  });
+}
+
 export async function ActivateExercise(id) {
   const cookies = new Cookies();
   const userInfo = cookies.get("userInfo");
@@ -126,8 +139,10 @@ export async function GetAllSourcesForCourse(courseId) {
   );
 }
 
-export async function GetAllCourses() {
-  return await fetch(GetBasePath() + "course/getall");
+export async function GetAllCourses(includeInactive) {
+  return await fetch(
+    GetBasePath() + "course/getall?includeInactive=" + includeInactive
+  );
 }
 
 export function GetBasePath() {

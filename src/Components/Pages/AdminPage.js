@@ -61,7 +61,7 @@ const AdminPage = () => {
       navigate("/");
     }
     async function FetchCourses() {
-      let response = await GetAllCourses();
+      let response = await GetAllCourses(true);
       setCourses(await response.json());
     }
 
@@ -112,55 +112,86 @@ const AdminPage = () => {
       <SectionsMainContainer>
         <AdminSection>
           <ComponentContainer>
-            <SubHeader>Skapa eller välj en kurs att redigera</SubHeader>
-            <Spacing Height={"2.2rem"} />
-            <TextField
-              setState={setCoursesSearchText}
-              title={"Sök:"}
-              placeHolder={"Kursnamn eller kod..."}
-              width={20}
-            ></TextField>
-            <Spacing Height={"2.2rem"} />
             {courses ? (
               <>
                 {creatingNewCourse ? (
-                  <CreateNewCourseModule
-                    onCancel={() => {
-                      setCreatingNewCourse(false);
-                    }}
-                    onCreate={async (courseName, courseCode) => {
-                      let createResult = await CreateNewCourse(
-                        courseName,
-                        courseCode
-                      );
-
-                      if (createResult.status === 200) {
+                  <>
+                    <SubHeader>Skapar en ny kurs</SubHeader>
+                    <Spacing Height={"2.2rem"} />
+                    <CreateNewCourseModule
+                      onCancel={() => {
                         setCreatingNewCourse(false);
-                        setCourses(null);
-                      }
-                    }}
-                  />
+                      }}
+                      onCreate={async (courseName, courseCode) => {
+                        let createResult = await CreateNewCourse(
+                          courseName,
+                          courseCode
+                        );
+
+                        if (createResult.status === 200) {
+                          setCreatingNewCourse(false);
+                          setCourses(null);
+                        }
+                      }}
+                    />
+                  </>
                 ) : (
-                  <CourseContainer
-                    width={20}
-                    courseSelected={(courseId) => {
-                      setCourse(courses.find((x) => x.id === courseId));
-                      setSources(null);
-                      setModules(null);
-                      setSource(null);
-                      setModule(null);
-                      setExercises(null);
-                      setExercise(null);
-                      setDifficultySettings(null);
-                      setSettingModule(false);
-                      setCreatingNewSource(false);
-                    }}
-                    createCourse={() => {
-                      setCreatingNewCourse(true);
-                      setCreatingNewSource(false);
-                    }}
-                    courses={courses}
-                  />
+                  <>
+                    {course ? (
+                      <>
+                        <SubHeader>Vald kurs:</SubHeader>
+                        <Spacing Height={"2.2rem"} />
+                        <ThickButton secondLine={course.code} width={20}>
+                          {course.name}
+                        </ThickButton>
+                        <Spacing Height={"2rem"} />
+                        <ThinButton
+                          Width={"20rem"}
+                          TextColor={Color.Dark}
+                          Color={Color.Red}
+                          onClick={() => {
+                            setCourse(null);
+                          }}
+                        >
+                          Tillbaka till lista
+                        </ThinButton>
+                      </>
+                    ) : (
+                      <>
+                        <SubHeader>
+                          Skapa eller välj en kurs att redigera
+                        </SubHeader>
+                        <Spacing Height={"2.2rem"} />
+                        <TextField
+                          setState={setCoursesSearchText}
+                          title={"Sök:"}
+                          placeHolder={"Kursnamn eller kod..."}
+                          width={20}
+                        ></TextField>
+                        <Spacing Height={"2.2rem"} />
+                        <CourseContainer
+                          width={20}
+                          courseSelected={(courseId) => {
+                            setCourse(courses.find((x) => x.id === courseId));
+                            setSources(null);
+                            setModules(null);
+                            setSource(null);
+                            setModule(null);
+                            setExercises(null);
+                            setExercise(null);
+                            setDifficultySettings(null);
+                            setSettingModule(false);
+                            setCreatingNewSource(false);
+                          }}
+                          createCourse={() => {
+                            setCreatingNewCourse(true);
+                            setCreatingNewSource(false);
+                          }}
+                          courses={courses}
+                        />
+                      </>
+                    )}
+                  </>
                 )}
               </>
             ) : null}
