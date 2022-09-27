@@ -58,30 +58,36 @@ export async function CreateNewCourse(name, code) {
   });
 }
 
-export async function ActivateCourse(id) {
+export async function SetCourseActiveStatus(id, active) {
   const cookies = new Cookies();
   const userInfo = cookies.get("userInfo");
 
-  return await fetch(GetBasePath() + "admin/course/activate?id=" + id, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + userInfo.token,
-    },
-  });
+  return await fetch(
+    GetBasePath() + "admin/course/setActive?id=" + id + "&active=" + active,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + userInfo.token,
+      },
+    }
+  );
 }
 
-export async function ActivateExercise(id) {
+export async function SetExerciseActiveStatus(id, active) {
   const cookies = new Cookies();
   const userInfo = cookies.get("userInfo");
 
-  return await fetch(GetBasePath() + "admin/exercise/activate?id=" + id, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + userInfo.token,
-    },
-  });
+  return await fetch(
+    GetBasePath() + "admin/exercise/setActive?id=" + id + "&active=" + active,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + userInfo.token,
+      },
+    }
+  );
 }
 
 export async function CreateNewExercise(id, difficulty, sourceId, moduleId) {

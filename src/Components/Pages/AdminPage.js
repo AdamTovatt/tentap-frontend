@@ -21,7 +21,8 @@ import {
   GetExerciseById,
   GetAllExercisesForCourse,
   DeleteExercise,
-  ActivateExercise,
+  SetExerciseActiveStatus,
+  SetCourseActiveStatus,
 } from "../../Api";
 import TextField from "../TextField";
 import CourseContainer from "../CourseContainer";
@@ -144,6 +145,42 @@ const AdminPage = () => {
                         <ThickButton secondLine={course.code} width={20}>
                           {course.name}
                         </ThickButton>
+                        <Spacing Height={"1rem"} />
+                        {course.active ? (
+                          <ThinButton
+                            Width={"20rem"}
+                            TextColor={Color.White}
+                            Color={Color.Blue}
+                            onClick={async () => {
+                              if (
+                                (await SetCourseActiveStatus(course.id, false))
+                                  .status === 200
+                              ) {
+                                course.active = false;
+                                setCourse(null);
+                              }
+                            }}
+                          >
+                            Avaktivera kurs
+                          </ThinButton>
+                        ) : (
+                          <ThinButton
+                            Width={"20rem"}
+                            TextColor={Color.Dark}
+                            Color={Color.Cyan}
+                            onClick={async () => {
+                              if (
+                                (await SetCourseActiveStatus(course.id, true))
+                                  .status === 200
+                              ) {
+                                course.active = true;
+                                setCourse(null);
+                              }
+                            }}
+                          >
+                            Aktivera kurs
+                          </ThinButton>
+                        )}
                         <Spacing Height={"2rem"} />
                         <ThinButton
                           Width={"20rem"}
@@ -225,12 +262,14 @@ const AdminPage = () => {
                           Color={Color.Cyan}
                           TextColor={Color.Dark}
                           onClick={async () => {
-                            let result = await ActivateExercise(exercise.id);
+                            let result = await SetExerciseActiveStatus(
+                              exercise.id,
+                              true
+                            );
 
                             if (result.status === 200) {
-                              let newExercise = exercise;
-                              newExercise.isActive = true;
-                              setExercise(newExercise);
+                              exercise.isActive = true;
+                              setExercise(null);
                             }
                           }}
                         >
@@ -241,12 +280,14 @@ const AdminPage = () => {
                           Color={Color.Blue}
                           TextColor={Color.White}
                           onClick={async () => {
-                            let result = await ActivateExercise(exercise.id);
+                            let result = await SetExerciseActiveStatus(
+                              exercise.id,
+                              false
+                            );
 
                             if (result.status === 200) {
-                              let newExercise = exercise;
-                              newExercise.isActive = true;
-                              setExercise(newExercise);
+                              exercise.isActive = false;
+                              setExercise(null);
                             }
                           }}
                         >
