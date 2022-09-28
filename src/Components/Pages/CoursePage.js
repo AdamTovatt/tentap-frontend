@@ -13,6 +13,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import TextField from "../TextField";
 import CourseContainer from "../CourseContainer";
 import { GetCourse } from "../../Api";
+import CourseInfo from "../CourseInfo";
 
 const CoursePage = () => {
   const [course, setCourse] = useState(null);
@@ -37,7 +38,8 @@ const CoursePage = () => {
         <ComponentContainer>
           {course ? (
             <>
-              <SubHeader>{course.name}</SubHeader>
+              <Spacing Height={"2rem"}></Spacing>
+              <CourseInfo title={course.name} />
             </>
           ) : (
             <>
