@@ -145,6 +145,10 @@ export async function GetAllSourcesForCourse(courseId) {
   );
 }
 
+export async function GetCourse(id) {
+  return await fetch(GetBasePath() + "course/get?id=" + id);
+}
+
 export async function GetAllCourses(includeInactive) {
   return await fetch(
     GetBasePath() + "course/getall?includeInactive=" + includeInactive
@@ -155,7 +159,8 @@ export function GetBasePath() {
   let requestPath = "https://ledigasalar.online/tentap/";
   if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
     //use local address if development
-    requestPath = "https://localhost:5001/";
+    //requestPath = "https://localhost:5001/";
+    requestPath = "http://192.168.1.89/tentap/";
   }
   return requestPath;
 }

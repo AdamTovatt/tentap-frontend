@@ -31,7 +31,9 @@ const StartPage = () => {
             MaxHeight={4.6}
             ScreenPercentage={5}
           />
-          <ThickButton>Gå till kurser</ThickButton>
+          <Link style={{ textDecoration: "none" }} to={"/courses"}>
+            <ThickButton>Gå till kurser</ThickButton>
+          </Link>
         </ComponentContainer>
         <ComponentContainer>
           <AdvancedSpacing
