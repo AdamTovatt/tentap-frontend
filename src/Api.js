@@ -123,6 +123,30 @@ export async function GetExerciseById(exerciseId) {
   );
 }
 
+export async function GetNextExercise(id, easy, medium, hard) {
+  const cookies = new Cookies();
+  const userInfo = cookies.get("userInfo");
+
+  return await fetch(
+    GetBasePath() +
+      "course/exercise/getNext?courseId=" +
+      id +
+      "&easy=" +
+      easy +
+      "&medium=" +
+      medium +
+      "&hard=" +
+      hard,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + userInfo.token,
+      },
+    }
+  );
+}
+
 export async function GetAllModulesForCourse(courseId) {
   return await fetch(
     GetBasePath() + "course/getModulesByCourseId?courseId=" + courseId

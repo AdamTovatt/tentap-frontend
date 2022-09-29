@@ -19,7 +19,7 @@ import DifficultySelection from "../DifficultySelection";
 const CoursePage = () => {
   const [course, setCourse] = useState(null);
   const [failed, setFailed] = useState(false);
-  const { id } = useParams();
+  const { id, easy, medium, hard } = useParams();
 
   useEffect(() => {
     async function FetchCourse() {
@@ -37,50 +37,8 @@ const CoursePage = () => {
     <CenterScreen>
       <MainContainer>
         <ComponentContainer>
-          {course ? (
-            <>
-              <Spacing Height={"2rem"}></Spacing>
-              <CourseInfo title={course.name} />
-            </>
-          ) : (
-            <>
-              {failed ? (
-                <SubHeader>Fel när kursen skulle hämtas :(</SubHeader>
-              ) : (
-                <SubHeader>Hämtar kurs</SubHeader>
-              )}
-            </>
-          )}
-          <Spacing Height={"2rem"} />
-          <SmallTextContainer>
-            <SmallText>Välj svårhetsgrad för uppgifter</SmallText>
-          </SmallTextContainer>
-          <Spacing Height={"0.5rem"} />
-          <DifficultySelection
-            width={20}
-            allowMultipleSettings={true}
-            onChangedDifficultySetting={(difficulty) => {
-              console.log(difficulty);
-            }}
-          ></DifficultySelection>
-          <Spacing Height={"2rem"} />
-          <ThickButton width={20}>
-            {"Ge mig uppgifter!" +
-              (randomNumberInRange(0, 100) < 2 ? " (Snälla)" : "")}
-          </ThickButton>
+          <SubHeader>Hej</SubHeader>
         </ComponentContainer>
-        <ComponentContainerBottom>
-          <Link to={"/courses"}>
-            <ThinButton
-              Width={"20rem"}
-              Color={Color.Red}
-              TextColor={Color.Dark}
-            >
-              Tillbaka
-            </ThinButton>
-          </Link>
-          <Spacing Height={"2rem"}></Spacing>
-        </ComponentContainerBottom>
       </MainContainer>
     </CenterScreen>
   );

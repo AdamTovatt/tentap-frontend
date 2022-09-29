@@ -23,6 +23,10 @@ root.render(
       <Route path="/admin" element={<AdminPage />}></Route>
       <Route path="/courses" element={<CoursesPage />}></Route>
       <Route path="/course/:id" element={<CoursePage />}></Route>
+      <Route
+        path="/exercise/:id/:easy/:medium/:hard"
+        element={<CoursePage />}
+      ></Route>
     </Routes>
   </BrowserRouter>
 );
