@@ -18,14 +18,19 @@ import DifficultySelection from "../DifficultySelection";
 import SquareImageButton from "../SquareImageButton";
 import { PulseLoader as Loader } from "react-spinners";
 import ImagePreviewButton from "../ImagePreviewButton";
+import ImageViewer from "../ImageViewer";
+import { width } from "@mui/system";
 
 const ExercisePage = () => {
   const [exercise, setExercise] = useState(null);
   const [failed, setFailed] = useState(false);
   const [showSolution, setShowSolution] = useState(false);
+  const [imageToShow, setImageToShow] = useState(null);
+
   const { courseId, exerciseId } = useParams();
 
   const navigate = useNavigate();
+  const mediaQuery = useMediaQuery("(max-height:640px)");
 
   useEffect(() => {
     async function FetchExercise() {
@@ -43,115 +48,151 @@ const ExercisePage = () => {
     if (!failed && exercise == null) {
       FetchExercise();
     }
-  }, [exercise, failed, exerciseId]);
+  }, [exercise, failed, exerciseId, courseId, navigate]);
 
   return (
-    <CenterScreen>
-      <MainContainer>
-        <ComponentContainer>
-          {exercise ? (
-            <>
-              <AdvancedSpacing
-                MinHeight={0.1}
-                MaxHeight={1}
-                ScreenPercentage={0.0}
-              />
-              <SubHeader>
-                {"Uppgift från " +
-                  exercise.source.author +
-                  " (" +
-                  exercise.source.date.toString().split("T")[0] +
-                  ")"}
-              </SubHeader>
-              <AdvancedSpacing
-                MinHeight={1}
-                MaxHeight={2.5}
-                ScreenPercentage={4}
-              />
-              <SmallTextContainer>
-                <SmallText>Problem (tryck för att visa större):</SmallText>
-              </SmallTextContainer>
-              <Spacing Height={"0.4rem"} />
-              <ImagePreviewButton source={exercise.problemImage.url} />
-              <AdvancedSpacing
-                MinHeight={1}
-                MaxHeight={2.5}
-                ScreenPercentage={4}
-              />
-              <SmallTextContainer>
-                {showSolution ? (
-                  <SmallText>Lösning (tryck för att visa större):</SmallText>
-                ) : (
-                  <SmallText>Lösning (tryck för att visa):</SmallText>
-                )}
-              </SmallTextContainer>
-              <Spacing Height={"0.4rem"} />
-              <ImagePreviewButton
-                onClick={() => {
-                  setShowSolution(true);
-                }}
-                startHidden={true}
-                source={exercise.solutionImage.url}
-              />
-            </>
-          ) : (
-            <>
-              <Loader color={Color.Blue} />
-            </>
-          )}
-        </ComponentContainer>
-        <ComponentContainerBottom>
-          {useMediaQuery("(max-height:640px)") ? (
-            <>
-              <SideBySideButtonContainer>
-                <ThinButton
-                  Color={Color.Green}
-                  TextColor={Color.Dark}
-                  Width={"9.7rem"}
-                >
-                  Markera uppgift som slutförd
-                </ThinButton>
-                <HorizontalSpacing />
-                <AdvancedSpacing
-                  MinHeight={0.2}
-                  MaxHeight={1}
-                  ScreenPercentage={1}
-                />
-                <ThinButton Width={"9.7rem"}>Ta en annan uppgift</ThinButton>
-              </SideBySideButtonContainer>
-            </>
-          ) : (
-            <>
-              <ThinButton
-                Color={Color.Green}
-                TextColor={Color.Dark}
-                Width={"20rem"}
-              >
-                Markera uppgift som slutförd
-              </ThinButton>
-              <HorizontalSpacing />
+    <>
+      {imageToShow ? (
+        <MainContainer>
+          <ImageViewer source={imageToShow}></ImageViewer>
+          <Spacing Height={"0rem"} />
+          <ThinButton
+            TextColor={Color.Dark}
+            Color={Color.Red}
+            onClick={() => {
+              setImageToShow(null);
+            }}
+          >
+            Tillbaka
+          </ThinButton>
+        </MainContainer>
+      ) : (
+        <CenterScreen>
+          <MainContainer>
+            <ComponentContainer>
+              {exercise ? (
+                <>
+                  <AdvancedSpacing
+                    MinHeight={0.1}
+                    MaxHeight={1}
+                    ScreenPercentage={0.0}
+                  />
+                  <SubHeader>
+                    {"Uppgift från " +
+                      exercise.source.author +
+                      " (" +
+                      exercise.source.date.toString().split("T")[0] +
+                      ")"}
+                  </SubHeader>
+                  <AdvancedSpacing
+                    MinHeight={1}
+                    MaxHeight={2.5}
+                    ScreenPercentage={4}
+                  />
+                  <SmallTextContainer>
+                    <SmallText>Problem (tryck för att visa större):</SmallText>
+                  </SmallTextContainer>
+                  <Spacing Height={"0.4rem"} />
+                  <ImagePreviewButton
+                    source={exercise.problemImage.url}
+                    onClick={() => {
+                      setImageToShow(exercise.problemImage.url);
+                    }}
+                  />
+                  <AdvancedSpacing
+                    MinHeight={1}
+                    MaxHeight={2.5}
+                    ScreenPercentage={4}
+                  />
+                  <SmallTextContainer>
+                    {showSolution ? (
+                      <SmallText>
+                        Lösning (tryck för att visa större):
+                      </SmallText>
+                    ) : (
+                      <SmallText>Lösning (tryck för att visa):</SmallText>
+                    )}
+                  </SmallTextContainer>
+                  <Spacing Height={"0.4rem"} />
+                  <ImagePreviewButton
+                    onClick={() => {
+                      if (!showSolution) setShowSolution(true);
+                      else setImageToShow(exercise.solutionImage.url);
+                    }}
+                    startHidden={!showSolution}
+                    source={exercise.solutionImage.url}
+                  />
+                </>
+              ) : (
+                <>
+                  <Loader color={Color.Blue} />
+                </>
+              )}
+            </ComponentContainer>
+            <ComponentContainerBottom>
+              {mediaQuery ? (
+                <>
+                  <SideBySideButtonContainer>
+                    <ThinButton
+                      Color={Color.Green}
+                      TextColor={Color.Dark}
+                      Width={"9.7rem"}
+                    >
+                      Markera uppgift som slutförd
+                    </ThinButton>
+                    <HorizontalSpacing />
+                    <AdvancedSpacing
+                      MinHeight={0.2}
+                      MaxHeight={1}
+                      ScreenPercentage={1}
+                    />
+                    <ThinButton Width={"9.7rem"}>
+                      Ta en annan uppgift
+                    </ThinButton>
+                  </SideBySideButtonContainer>
+                </>
+              ) : (
+                <>
+                  <ThinButton
+                    Color={Color.Green}
+                    TextColor={Color.Dark}
+                    Width={"20rem"}
+                  >
+                    Markera uppgift som slutförd
+                  </ThinButton>
+                  <HorizontalSpacing />
+                  <AdvancedSpacing
+                    MinHeight={0.2}
+                    MaxHeight={1}
+                    ScreenPercentage={1}
+                  />
+                  <ThinButton Width={"20rem"}>Ta en annan uppgift</ThinButton>
+                </>
+              )}
               <AdvancedSpacing
                 MinHeight={0.2}
                 MaxHeight={1}
                 ScreenPercentage={1}
               />
-              <ThinButton Width={"20rem"}>Ta en annan uppgift</ThinButton>
-            </>
-          )}
-          <AdvancedSpacing MinHeight={0.2} MaxHeight={1} ScreenPercentage={1} />
-          <Link to={"/course/" + courseId}>
-            <ThinButton
-              Color={Color.Red}
-              TextColor={Color.Dark}
-              Width={"20rem"}
-            >
-              Tillbaka
-            </ThinButton>
-          </Link>
-          <AdvancedSpacing MinHeight={2} MaxHeight={2} ScreenPercentage={6} />
-        </ComponentContainerBottom>
-      </MainContainer>
-    </CenterScreen>
+              <Link to={"/course/" + courseId}>
+                <ThinButton
+                  Color={Color.Red}
+                  TextColor={Color.Dark}
+                  Width={"20rem"}
+                >
+                  Tillbaka
+                </ThinButton>
+              </Link>
+              <AdvancedSpacing
+                MinHeight={2}
+                MaxHeight={2}
+                ScreenPercentage={6}
+              />
+            </ComponentContainerBottom>
+          </MainContainer>
+        </CenterScreen>
+      )}
+    </>
   );
 };
 
