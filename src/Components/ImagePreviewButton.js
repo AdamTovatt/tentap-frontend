@@ -29,6 +29,9 @@ const ImagePreviewButton = ({ source, onClick, startHidden }) => {
 const Image = styled.img`
   border-radius: 9px;
   max-width: 19.5rem;
+  width: 19.5rem;
+  height: 5rem;
+  max-height: 5.75rem;
   margin: 0.22rem;
   height: 100%;
   object-fit: cover;
@@ -49,7 +52,7 @@ const ButtonHtml = styled.button`
   font-size: 1em;
   font-family: "Jost";
   width: 20rem;
-  max-height: 9rem;
+  max-height: 6.25rem;
   height: 6.25rem;
   border-radius: ${BorderRadius.Default};
   border: none;

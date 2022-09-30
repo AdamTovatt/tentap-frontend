@@ -55,16 +55,18 @@ const ExercisePage = () => {
       {imageToShow ? (
         <MainContainer>
           <ImageViewer source={imageToShow}></ImageViewer>
-          <Spacing Height={"0rem"} />
-          <ThinButton
-            TextColor={Color.Dark}
-            Color={Color.Red}
-            onClick={() => {
-              setImageToShow(null);
-            }}
-          >
-            Tillbaka
-          </ThinButton>
+          <ImageViewerBackButtonContainer>
+            <ThinButton
+              Width={"20rem"}
+              TextColor={Color.Dark}
+              Color={Color.Red}
+              onClick={() => {
+                setImageToShow(null);
+              }}
+            >
+              Tillbaka
+            </ThinButton>
+          </ImageViewerBackButtonContainer>
         </MainContainer>
       ) : (
         <CenterScreen>
@@ -195,6 +197,12 @@ const ExercisePage = () => {
     </>
   );
 };
+
+const ImageViewerBackButtonContainer = styled.div`
+  position: absolute;
+  bottom: 1rem;
+  width: 100%;
+`;
 
 const ComponentContainerBottom = styled.div`
   display: flex;

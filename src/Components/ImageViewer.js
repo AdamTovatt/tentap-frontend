@@ -8,8 +8,13 @@ const ImageViewer = ({ source }) => {
 const Image = styled.img`
   border-radius: ${BorderRadius.Default};
   object-fit: contain;
-  width: 100vw;
-  height: 100vh;
+  width: 95vw;
+  height: 95vh;
+
+  @media (min-width: 640px) {
+    width: 50rem;
+    height: 50rem;
+  }
 `;
 
 export default ImageViewer;
