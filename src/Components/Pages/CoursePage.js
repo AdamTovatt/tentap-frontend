@@ -32,6 +32,8 @@ const CoursePage = () => {
   const userInfo = cookies.get("userInfo");
   const isLoggedIn = userInfo !== undefined && userInfo != null;
 
+  const savedDifficultySetting = cookies.get("difficultySettings");
+
   useEffect(() => {
     async function FetchCourse() {
       let response = await GetCourse(id);
@@ -51,7 +53,7 @@ const CoursePage = () => {
           {course ? (
             <>
               <Spacing Height={"2rem"}></Spacing>
-              <CourseInfo title={course.name} />
+              <CourseInfo showLoginButton={!isLoggedIn} title={course.name} />
             </>
           ) : (
             <>
@@ -72,14 +74,24 @@ const CoursePage = () => {
             allowMultipleSettings={true}
             onChangedDifficultySetting={(difficulty) => {
               setDifficultySelection(difficulty);
+              cookies.set("difficultySettings", difficulty, {
+                path: "/",
+                sameSite: "none",
+                secure: true,
+              });
             }}
-            defaultSetting={difficultySelection}
+            defaultSetting={savedDifficultySetting}
           ></DifficultySelection>
           <Spacing Height={"2rem"} />
           <ThickButton
             width={20}
             onClick={async () => {
-              if (difficultySelection) {
+              if (
+                difficultySelection &&
+                (difficultySelection[0] ||
+                  difficultySelection[1] ||
+                  difficultySelection[2])
+              ) {
                 let response = await GetNextExercise(
                   course.id,
                   difficultySelection[0],

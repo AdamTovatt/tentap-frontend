@@ -29,8 +29,11 @@ const ExercisePage = () => {
 
   const { courseId, exerciseId } = useParams();
 
+  const cookies = new Cookies();
   const navigate = useNavigate();
   const mediaQuery = useMediaQuery("(max-height:640px)");
+
+  const difficultySettings = cookies.get("difficultySettings");
 
   useEffect(() => {
     async function FetchExercise() {
@@ -168,7 +171,35 @@ const ExercisePage = () => {
                     MaxHeight={1}
                     ScreenPercentage={1}
                   />
-                  <ThinButton Width={"20rem"}>Ta en annan uppgift</ThinButton>
+                  <ThinButton
+                    Width={"20rem"}
+                    onClick={async () => {
+                      if (!difficultySettings) {
+                        navigate("/course/" + courseId);
+                        return;
+                      }
+                      let response = await GetNextExercise(
+                        courseId,
+                        difficultySettings[0],
+                        difficultySettings[1],
+                        difficultySettings[2]
+                      );
+
+                      if (response.status === 204) {
+                        alert("Det finns inga övningar :(");
+                      } else if (response.status === 200) {
+                        let json = await response.json();
+                        console.log("new exercise id: " + json.id);
+                        navigate(
+                          "/course/" + courseId + "/exercise/" + json.id
+                        );
+                        setExercise(null);
+                        setShowSolution(false);
+                      }
+                    }}
+                  >
+                    Ta en annan uppgift
+                  </ThinButton>
                 </>
               )}
               <AdvancedSpacing
