@@ -12,14 +12,25 @@ import { useEffect, useState } from "react";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import TextField from "../TextField";
 import CourseContainer from "../CourseContainer";
-import { GetCourse } from "../../Api";
+import { GetCourse, GetNextExercise } from "../../Api";
 import CourseInfo from "../CourseInfo";
 import DifficultySelection from "../DifficultySelection";
 
 const CoursePage = () => {
   const [course, setCourse] = useState(null);
   const [failed, setFailed] = useState(false);
+  const [difficultySelection, setDifficultySelection] = useState([
+    true,
+    false,
+    false,
+  ]);
   const { id } = useParams();
+
+  const cookies = new Cookies();
+  const navigate = useNavigate();
+
+  const userInfo = cookies.get("userInfo");
+  const isLoggedIn = userInfo !== undefined && userInfo != null;
 
   useEffect(() => {
     async function FetchCourse() {
@@ -60,11 +71,37 @@ const CoursePage = () => {
             width={20}
             allowMultipleSettings={true}
             onChangedDifficultySetting={(difficulty) => {
-              console.log(difficulty);
+              setDifficultySelection(difficulty);
             }}
+            defaultSetting={difficultySelection}
           ></DifficultySelection>
           <Spacing Height={"2rem"} />
-          <ThickButton width={20}>
+          <ThickButton
+            width={20}
+            onClick={async () => {
+              if (difficultySelection) {
+                let response = await GetNextExercise(
+                  course.id,
+                  difficultySelection[0],
+                  difficultySelection[1],
+                  difficultySelection[2]
+                );
+
+                if (response.status === 204) {
+                  alert("Det finns inga övningar :(");
+                } else if (response.status === 200) {
+                  navigate(
+                    "/course/" +
+                      course.id +
+                      "/exercise/" +
+                      (await response.json()).id
+                  );
+                }
+              } else {
+                alert("Du måste välja minst en svårhetsgrad att ha med först");
+              }
+            }}
+          >
             {"Ge mig uppgifter!" +
               (randomNumberInRange(0, 100) < 2 ? " (Snälla)" : "")}
           </ThickButton>

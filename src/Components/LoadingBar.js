@@ -20,6 +20,8 @@ const LoadingBarBackground = styled.div`
   margin-right: 1rem;
   margin-bottom: 0.9rem;
   border-radius: 6px;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
 `;
 
 const LoadingBarParent = styled.div`

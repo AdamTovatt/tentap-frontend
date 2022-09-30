@@ -11,6 +11,7 @@ import UserProfilePage from "./Components/Pages/UserProfilePage";
 import AdminPage from "./Components/Pages/AdminPage";
 import CoursesPage from "./Components/Pages/CoursesPage";
 import CoursePage from "./Components/Pages/CoursePage";
+import ExercisePage from "./Components/Pages/ExercisePage";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -24,8 +25,8 @@ root.render(
       <Route path="/courses" element={<CoursesPage />}></Route>
       <Route path="/course/:id" element={<CoursePage />}></Route>
       <Route
-        path="/exercise/:id/:easy/:medium/:hard"
-        element={<CoursePage />}
+        path="/course/:courseId/exercise/:exerciseId"
+        element={<ExercisePage />}
       ></Route>
     </Routes>
   </BrowserRouter>
