@@ -18,13 +18,11 @@ const StartPage = () => {
     <CenterScreen>
       <StartPageMainContainer>
         <ComponentContainer>
-          <StartPageHeader>
-            Det borde inte kosta pengar att plugga
-          </StartPageHeader>
+          <StartPageHeader>Det borde inte vara dyrt att plugga</StartPageHeader>
           <Spacing Height={"1rem"} />
           <StartPageSubHeader>
             Öva på tentauppgifter som är sorterade efter svårhetsgrad och
-            kursdel gratis
+            kursdel för 0kr
           </StartPageSubHeader>
           <AdvancedSpacing
             MinHeight={1.8}
@@ -136,7 +134,7 @@ const StartPageHeader = styled.div`
 const StartPageSubHeader = styled.div`
   font-size: 1.25em;
   color: ${Color.White};
-  max-width: 32rem;
+  max-width: 30rem;
 
   @media (max-width: 640px) {
     max-width: 18rem;
