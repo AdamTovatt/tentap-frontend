@@ -12,7 +12,6 @@ const DifficultySelection = ({
     defaultSetting ? defaultSetting : [false, false, false]
   );
 
-  console.log(defaultSetting);
   useEffect(() => {}, [difficultySettings]);
 
   return (

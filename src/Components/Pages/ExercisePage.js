@@ -12,7 +12,13 @@ import { useEffect, useState } from "react";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import TextField from "../TextField";
 import CourseContainer from "../CourseContainer";
-import { GetCourse, GetExerciseById, GetNextExercise } from "../../Api";
+import {
+  GetCourse,
+  GetExerciseById,
+  GetNextExercise,
+  SetExerciseCompleted,
+  SetExerciseNotCompleted,
+} from "../../Api";
 import CourseInfo from "../CourseInfo";
 import DifficultySelection from "../DifficultySelection";
 import SquareImageButton from "../SquareImageButton";
@@ -26,6 +32,7 @@ const ExercisePage = () => {
   const [failed, setFailed] = useState(false);
   const [showSolution, setShowSolution] = useState(false);
   const [imageToShow, setImageToShow] = useState(null);
+  const [exerciseCompleted, setExerciseCompleted] = useState(false);
 
   const { courseId, exerciseId } = useParams();
 
@@ -40,8 +47,8 @@ const ExercisePage = () => {
       let response = await GetExerciseById(exerciseId);
       if (response.status === 200) {
         let json = await response.json();
-        console.log(json);
         setExercise(json);
+        if (exercise.completed) setExerciseCompleted(true);
       } else {
         if (response.status === 204) navigate("/course/" + courseId);
         setFailed(true);
@@ -51,7 +58,7 @@ const ExercisePage = () => {
     if (!failed && exercise == null) {
       FetchExercise();
     }
-  }, [exercise, failed, exerciseId, courseId, navigate]);
+  }, [exercise, failed, exerciseId, courseId, navigate, exercise?.completed]);
 
   return (
     <>
@@ -135,73 +142,128 @@ const ExercisePage = () => {
               )}
             </ComponentContainer>
             <ComponentContainerBottom>
-              {mediaQuery ? (
+              {exercise ? (
                 <>
-                  <SideBySideButtonContainer>
-                    <ThinButton
-                      Color={Color.Green}
-                      TextColor={Color.Dark}
-                      Width={"9.7rem"}
-                    >
-                      Markera uppgift som slutförd
-                    </ThinButton>
-                    <HorizontalSpacing />
-                    <AdvancedSpacing
-                      MinHeight={0.2}
-                      MaxHeight={1}
-                      ScreenPercentage={1}
-                    />
-                    <ThinButton Width={"9.7rem"}>
-                      Ta en annan uppgift
-                    </ThinButton>
-                  </SideBySideButtonContainer>
-                </>
-              ) : (
-                <>
-                  <ThinButton
-                    Color={Color.Green}
-                    TextColor={Color.Dark}
-                    Width={"20rem"}
-                  >
-                    Markera uppgift som slutförd
-                  </ThinButton>
-                  <HorizontalSpacing />
-                  <AdvancedSpacing
-                    MinHeight={0.2}
-                    MaxHeight={1}
-                    ScreenPercentage={1}
-                  />
-                  <ThinButton
-                    Width={"20rem"}
-                    onClick={async () => {
-                      if (!difficultySettings) {
-                        navigate("/course/" + courseId);
-                        return;
-                      }
-                      let response = await GetNextExercise(
-                        courseId,
-                        difficultySettings[0],
-                        difficultySettings[1],
-                        difficultySettings[2]
-                      );
+                  {mediaQuery ? (
+                    <>
+                      <SideBySideButtonContainer>
+                        {exercise.completed ? (
+                          <ThinButton
+                            Color={Color.Blue}
+                            TextColor={Color.Dark}
+                            Width={"9.7rem"}
+                            onClick={async () => {
+                              let response = await SetExerciseNotCompleted(
+                                exercise.id
+                              );
+                              if (response.status === 200)
+                                exercise.completed = false;
+                            }}
+                          >
+                            Avmarkera uppgift som slutförd
+                          </ThinButton>
+                        ) : (
+                          <ThinButton
+                            Color={Color.Green}
+                            TextColor={Color.Dark}
+                            Width={"9.7rem"}
+                            onClick={async () => {
+                              let response = await SetExerciseCompleted(
+                                exercise.id
+                              );
+                              if (response.status === 200)
+                                exercise.completed = true;
+                            }}
+                          >
+                            Markera uppgift som slutförd
+                          </ThinButton>
+                        )}
+                        <HorizontalSpacing />
+                        <AdvancedSpacing
+                          MinHeight={0.2}
+                          MaxHeight={1}
+                          ScreenPercentage={1}
+                        />
+                        <ThinButton Width={"9.7rem"}>
+                          Ta en annan uppgift
+                        </ThinButton>
+                      </SideBySideButtonContainer>
+                    </>
+                  ) : (
+                    <>
+                      {exerciseCompleted ? (
+                        <ThinButton
+                          Color={Color.Blue}
+                          TextColor={Color.Dark}
+                          Width={"20rem"}
+                          onClick={async () => {
+                            let response = await SetExerciseNotCompleted(
+                              exercise.id
+                            );
+                            if (response.status === 200) {
+                              exercise.completed = false;
+                              setExerciseCompleted(false);
+                            }
+                          }}
+                        >
+                          Avmarkera uppgift som slutförd
+                        </ThinButton>
+                      ) : (
+                        <ThinButton
+                          Color={Color.Green}
+                          TextColor={Color.Dark}
+                          Width={"20rem"}
+                          onClick={async () => {
+                            let response = await SetExerciseCompleted(
+                              exercise.id
+                            );
+                            if (response.status === 200) {
+                              exercise.completed = true;
+                              setExerciseCompleted(true);
+                            }
+                          }}
+                        >
+                          Markera uppgift som slutförd
+                        </ThinButton>
+                      )}
+                      <AdvancedSpacing
+                        MinHeight={0.2}
+                        MaxHeight={1}
+                        ScreenPercentage={1}
+                      />
+                      <ThinButton
+                        Width={"20rem"}
+                        onClick={async () => {
+                          if (!difficultySettings) {
+                            navigate("/course/" + courseId);
+                            return;
+                          }
+                          let response = await GetNextExercise(
+                            courseId,
+                            difficultySettings[0],
+                            difficultySettings[1],
+                            difficultySettings[2]
+                          );
 
-                      if (response.status === 204) {
-                        alert("Det finns inga övningar :(");
-                      } else if (response.status === 200) {
-                        let json = await response.json();
-                        console.log("new exercise id: " + json.id);
-                        navigate(
-                          "/course/" + courseId + "/exercise/" + json.id
-                        );
-                        setExercise(null);
-                        setShowSolution(false);
-                      }
-                    }}
-                  >
-                    Ta en annan uppgift
-                  </ThinButton>
+                          if (response.status === 204) {
+                            alert("Det finns inga övningar :(");
+                          } else if (response.status === 200) {
+                            let json = await response.json();
+                            console.log("new exercise id: " + json.id);
+                            navigate(
+                              "/course/" + courseId + "/exercise/" + json.id
+                            );
+                            setExercise(null);
+                            setShowSolution(false);
+                          }
+                        }}
+                      >
+                        Ta en annan uppgift
+                      </ThinButton>
+                    </>
+                  )}
                 </>
-              )}
+              ) : null}
               <AdvancedSpacing
                 MinHeight={0.2}
                 MaxHeight={1}

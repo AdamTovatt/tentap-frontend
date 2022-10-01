@@ -3,6 +3,7 @@ import { Color, BorderRadius } from "./Constants";
 import Spacing from "./Spacing";
 
 const LoadingBar = ({ width, completion, text, color }) => {
+  console.log("fill: " + width * completion);
   return (
     <LoadingBarBackground width={width} color={color}>
       <LoadingBarParent>
@@ -14,7 +15,7 @@ const LoadingBar = ({ width, completion, text, color }) => {
 };
 
 const LoadingBarBackground = styled.div`
-  max-width: 100%;
+  width: ${(props) => (props.width ? props.width + "rem" : "20rem")};
   outline: ${(props) => (props.color ? props.color : Color.White)} solid 3px;
   margin-left: 1rem;
   margin-right: 1rem;

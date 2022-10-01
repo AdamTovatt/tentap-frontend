@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import TextField from "../TextField";
 import CourseContainer from "../CourseContainer";
-import { GetCourse, GetNextExercise } from "../../Api";
+import { GetCourse, GetCourseCompletionInfo, GetNextExercise } from "../../Api";
 import CourseInfo from "../CourseInfo";
 import DifficultySelection from "../DifficultySelection";
 
@@ -24,6 +24,7 @@ const CoursePage = () => {
     false,
     false,
   ]);
+  const [courseCompletionInfo, setCourseCompletionInfo] = useState(null);
   const { id } = useParams();
 
   const cookies = new Cookies();
@@ -41,10 +42,20 @@ const CoursePage = () => {
       else setFailed(true);
     }
 
+    async function FetchCourseCompletionInfo() {
+      let response = await GetCourseCompletionInfo(id);
+      if (response.status === 200)
+        setCourseCompletionInfo(await response.json());
+      else setFailed(true);
+    }
+
     if (!failed && course == null) {
       FetchCourse();
     }
-  }, [course, failed, id]);
+    if (!failed && courseCompletionInfo == null) {
+      FetchCourseCompletionInfo();
+    }
+  }, [course, failed, id, courseCompletionInfo]);
 
   return (
     <CenterScreen>
@@ -53,7 +64,12 @@ const CoursePage = () => {
           {course ? (
             <>
               <Spacing Height={"2rem"}></Spacing>
-              <CourseInfo showLoginButton={!isLoggedIn} title={course.name} />
+              <CourseInfo
+                showLoginButton={!isLoggedIn}
+                title={course.name}
+                courseCompletionInfo={courseCompletionInfo}
+                width={20}
+              />
             </>
           ) : (
             <>
@@ -87,16 +103,16 @@ const CoursePage = () => {
             width={20}
             onClick={async () => {
               if (
-                difficultySelection &&
-                (difficultySelection[0] ||
-                  difficultySelection[1] ||
-                  difficultySelection[2])
+                savedDifficultySetting &&
+                (savedDifficultySetting[0] ||
+                  savedDifficultySetting[1] ||
+                  savedDifficultySetting[2])
               ) {
                 let response = await GetNextExercise(
                   course.id,
-                  difficultySelection[0],
-                  difficultySelection[1],
-                  difficultySelection[2]
+                  savedDifficultySetting[0],
+                  savedDifficultySetting[1],
+                  savedDifficultySetting[2]
                 );
 
                 if (response.status === 204) {

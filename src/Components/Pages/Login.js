@@ -82,7 +82,7 @@ const LoginPage = () => {
             </ThinButton>
           </Link>
           <Spacing Height={"1rem"} />
-          <Link to="/">
+          <Link to={-1}>
             <ThinButton
               Color={Color.Red}
               TextColor={Color.Dark}
@@ -112,7 +112,7 @@ async function HandleLogin(email, password, cookies, navigate) {
       sameSite: "none",
       secure: true,
     });
-    navigate("/");
+    navigate(-1);
   }
 }
 

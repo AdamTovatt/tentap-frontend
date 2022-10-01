@@ -118,8 +118,18 @@ export async function DeleteExercise(id) {
 }
 
 export async function GetExerciseById(exerciseId) {
+  const cookies = new Cookies();
+  const userInfo = cookies.get("userInfo");
+
   return await fetch(
-    GetBasePath() + "course/exercise/get?exerciseId=" + exerciseId
+    GetBasePath() + "course/exercise/get?exerciseId=" + exerciseId,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + userInfo?.token,
+      },
+    }
   );
 }
 
@@ -139,6 +149,54 @@ export async function GetNextExercise(id, easy, medium, hard) {
       hard,
     {
       method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + userInfo?.token,
+      },
+    }
+  );
+}
+
+export async function GetCourseCompletionInfo(id) {
+  const cookies = new Cookies();
+  const userInfo = cookies.get("userInfo");
+
+  return await fetch(
+    GetBasePath() + "course/getCompletionInfo?courseId=" + id,
+    {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + userInfo?.token,
+      },
+    }
+  );
+}
+
+export async function SetExerciseCompleted(id) {
+  const cookies = new Cookies();
+  const userInfo = cookies.get("userInfo");
+
+  return await fetch(
+    GetBasePath() + "course/exercise/setCompleted?exerciseId=" + id,
+    {
+      method: "POST",
+      body: JSON.stringify({ id }),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + userInfo?.token,
+      },
+    }
+  );
+}
+
+export async function SetExerciseNotCompleted(id) {
+  const cookies = new Cookies();
+  const userInfo = cookies.get("userInfo");
+
+  return await fetch(
+    GetBasePath() + "course/exercise/setNotCompleted?exerciseId=" + id,
+    {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + userInfo?.token,
@@ -183,8 +241,8 @@ export function GetBasePath() {
   let requestPath = "https://ledigasalar.online/tentap/";
   if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
     //use local address if development
-    //requestPath = "https://localhost:5001/";
-    requestPath = "http://192.168.1.89/tentap/";
+    requestPath = "https://localhost:5001/";
+    //requestPath = "http://192.168.1.89/tentap/";
   }
   return requestPath;
 }

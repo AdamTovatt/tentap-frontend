@@ -15,6 +15,7 @@ import Cookies from "universal-cookie";
 const RegisterPage = () => {
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
+  const [password2, setPassword2] = useState(null);
   const [username, setUsername] = useState(null);
 
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ const RegisterPage = () => {
           <RegisterPageHeader>
             Välj dina användaruppgifter för att registera ett konto
           </RegisterPageHeader>
-          <AdvancedSpacing MinHeight={1} MaxHeight={2.6} ScreenPercentage={4} />
+          <AdvancedSpacing MinHeight={1} MaxHeight={2.6} ScreenPercentage={3} />
           <TextField
             setState={setUsername}
             title={"Användarnamn:"}
@@ -40,6 +41,7 @@ const RegisterPage = () => {
               await HandleRegister(
                 email,
                 password,
+                password2,
                 username,
                 cookies,
                 navigate
@@ -55,6 +57,7 @@ const RegisterPage = () => {
               await HandleRegister(
                 email,
                 password,
+                password2,
                 username,
                 cookies,
                 navigate
@@ -71,6 +74,24 @@ const RegisterPage = () => {
               await HandleRegister(
                 email,
                 password,
+                password2,
+                username,
+                cookies,
+                navigate
+              );
+            }}
+          />
+          <AdvancedSpacing MinHeight={0.8} MaxHeight={1} ScreenPercentage={2} />
+          <TextField
+            setState={setPassword2}
+            title={"Bekräfta lösenord:"}
+            placeHolder={"Ditt lösenord igen..."}
+            type={"password"}
+            onSumbit={async () => {
+              await HandleRegister(
+                email,
+                password,
+                password2,
                 username,
                 cookies,
                 navigate
@@ -82,9 +103,21 @@ const RegisterPage = () => {
             MaxHeight={1.75}
             ScreenPercentage={3}
           />
-          <Link to="/login">
-            <ThinButton Color={Color.Green}>Skapa konto</ThinButton>
-          </Link>
+          <ThinButton
+            onClick={async () => {
+              await HandleRegister(
+                email,
+                password,
+                password2,
+                username,
+                cookies,
+                navigate
+              );
+            }}
+            Color={Color.Green}
+          >
+            Skapa konto
+          </ThinButton>
           <Spacing Height={"1.2rem"} />
         </EmailPasswordContainer>
         <AdvancedSpacing MinHeight={1} MaxHeight={8.625} ScreenPercentage={4} />
@@ -106,14 +139,34 @@ const RegisterPage = () => {
               Tillbaka
             </ThinButton>
           </Link>
+          <AdvancedSpacing
+            MinHeight={2}
+            MaxHeight={2.75}
+            ScreenPercentage={4}
+          />
         </ComponentContainer>
       </RegisterPageMainContainer>
     </CenterScreen>
   );
 };
 
-async function HandleRegister(email, password, username, cookies, navigate) {
-  if (!ValidInput(email, password)) return;
+async function HandleRegister(
+  email,
+  password,
+  password2,
+  username,
+  cookies,
+  navigate
+) {
+  if (!ValidInput(email, password, password2)) {
+    alert("Email eller lösenord saknas");
+    return;
+  }
+
+  if (password !== password2) {
+    alert("Du har skrivit två olika lösenord");
+    return;
+  }
 
   let response = await Register(email, password, username);
 
@@ -131,9 +184,10 @@ async function HandleRegister(email, password, username, cookies, navigate) {
   }
 }
 
-function ValidInput(email, password) {
+function ValidInput(email, password, password2) {
   if (!email) return false;
   if (!password) return false;
+  if (!password2) return false;
 
   return true;
 }
