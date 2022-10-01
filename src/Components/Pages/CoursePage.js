@@ -15,6 +15,7 @@ import CourseContainer from "../CourseContainer";
 import { GetCourse, GetCourseCompletionInfo, GetNextExercise } from "../../Api";
 import CourseInfo from "../CourseInfo";
 import DifficultySelection from "../DifficultySelection";
+import { PulseLoader as Loader } from "react-spinners";
 
 const CoursePage = () => {
   const [course, setCourse] = useState(null);
@@ -76,7 +77,12 @@ const CoursePage = () => {
               {failed ? (
                 <SubHeader>Fel när kursen skulle hämtas :(</SubHeader>
               ) : (
-                <SubHeader>Hämtar kurs</SubHeader>
+                <>
+                  <SubHeader>Hämtar kursinformation</SubHeader>
+                  <Spacing Height={"1rem"} />
+                  <Loader color={Color.Blue} />
+                  <Spacing Height={"1rem"} />
+                </>
               )}
             </>
           )}

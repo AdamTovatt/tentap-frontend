@@ -13,6 +13,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import TextField from "../TextField";
 import CourseContainer from "../CourseContainer";
 import { GetAllCourses } from "../../Api";
+import { PulseLoader as Loader } from "react-spinners";
 
 const CoursesPage = () => {
   const [courses, setCourses] = useState(null);
@@ -56,8 +57,10 @@ const CoursesPage = () => {
             ) : (
               <>
                 <ComponentContainer>
-                  <Spacing Height={"1.2rem"} />
+                  <Spacing Height={"4rem"} />
                   <SubHeader>Laddar kurser</SubHeader>
+                  <Spacing Height={"1rem"} />
+                  <Loader color={Color.Blue} />
                 </ComponentContainer>
               </>
             )}
