@@ -184,7 +184,34 @@ const ExercisePage = () => {
                           MaxHeight={1}
                           ScreenPercentage={1}
                         />
-                        <ThinButton Width={"9.7rem"}>
+                        <ThinButton
+                          Width={"9.7rem"}
+                          onClick={async () => {
+                            if (!difficultySettings) {
+                              navigate("/course/" + courseId);
+                              return;
+                            }
+                            let response = await GetNextExercise(
+                              courseId,
+                              difficultySettings[0],
+                              difficultySettings[1],
+                              difficultySettings[2]
+                            );
+
+                            if (response.status === 204) {
+                              alert("Det finns inga övningar :(");
+                            } else if (response.status === 200) {
+                              let json = await response.json();
+                              console.log("new exercise id: " + json.id);
+                              navigate(
+                                "/course/" + courseId + "/exercise/" + json.id
+                              );
+                              setExercise(null);
+                              setShowSolution(false);
+                              setExerciseCompleted(false);
+                            }
+                          }}
+                        >
                           Ta en annan uppgift
                         </ThinButton>
                       </SideBySideButtonContainer>
@@ -255,6 +282,7 @@ const ExercisePage = () => {
                             );
                             setExercise(null);
                             setShowSolution(false);
+                            setExerciseCompleted(false);
                           }
                         }}
                       >
