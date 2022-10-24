@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import CenterScreen from "../CenterScreen";
 import AdvancedSpacing from "../AdvancedSpacing";
 import Cookies from "universal-cookie";
+import { RemoveUserInfo } from "../../UserInfoHelper";
 
 const StartPage = () => {
   const cookies = new Cookies();
@@ -56,7 +57,7 @@ const StartPage = () => {
               <Link to="/">
                 <ThinButton
                   onClick={() => {
-                    Logout(cookies);
+                    Logout();
                   }}
                   Color={Color.FadedBlue}
                   Width={"15.5rem"}
@@ -103,12 +104,8 @@ const StartPage = () => {
   );
 };
 
-function Logout(cookies) {
-  cookies.remove("userInfo", {
-    path: "/",
-    sameSite: "none",
-    secure: true,
-  });
+function Logout() {
+  RemoveUserInfo();
   window.location.reload();
 }
 

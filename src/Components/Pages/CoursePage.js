@@ -16,6 +16,7 @@ import { GetCourse, GetCourseCompletionInfo, GetNextExercise } from "../../Api";
 import CourseInfo from "../CourseInfo";
 import DifficultySelection from "../DifficultySelection";
 import { PulseLoader as Loader } from "react-spinners";
+import { GetUserInfo } from "../../UserInfoHelper";
 
 const CoursePage = () => {
   const [course, setCourse] = useState(null);
@@ -31,7 +32,7 @@ const CoursePage = () => {
   const cookies = new Cookies();
   const navigate = useNavigate();
 
-  const userInfo = cookies.get("userInfo");
+  const userInfo = GetUserInfo();
   const isLoggedIn = userInfo !== undefined && userInfo != null;
 
   const savedDifficultySetting = cookies.get("difficultySettings");
