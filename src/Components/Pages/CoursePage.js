@@ -17,6 +17,7 @@ import CourseInfo from "../CourseInfo";
 import DifficultySelection from "../DifficultySelection";
 import { PulseLoader as Loader } from "react-spinners";
 import { GetUserInfo } from "../../UserInfoHelper";
+import DialogBox from "../DialogBox";
 
 const CoursePage = () => {
   const [course, setCourse] = useState(null);
@@ -27,6 +28,7 @@ const CoursePage = () => {
     false,
   ]);
   const [courseCompletionInfo, setCourseCompletionInfo] = useState(null);
+  const [dialogText, setDialogText] = useState(null);
   const { id } = useParams();
 
   const cookies = new Cookies();
@@ -61,6 +63,11 @@ const CoursePage = () => {
 
   return (
     <CenterScreen>
+      <>
+        {!dialogText ? null : (
+          <DialogBox text={dialogText} setDialogText={setDialogText} />
+        )}
+      </>
       <MainContainer>
         <ComponentContainer>
           {course ? (
@@ -123,7 +130,9 @@ const CoursePage = () => {
                 );
 
                 if (response.status === 204) {
-                  alert("Det finns inga övningar :(");
+                  setDialogText(
+                    "Det finns inga övningar som du inte redan gjort :("
+                  );
                 } else if (response.status === 200) {
                   navigate(
                     "/course/" +
@@ -133,7 +142,9 @@ const CoursePage = () => {
                   );
                 }
               } else {
-                alert("Du måste välja minst en svårhetsgrad att ha med först");
+                setDialogText(
+                  "Du måste välja minst en svårhetsgrad att ha med först"
+                );
               }
             }}
           >
