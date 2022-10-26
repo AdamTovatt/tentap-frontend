@@ -86,10 +86,11 @@ const CoursePage = () => {
                 <SubHeader>Fel när kursen skulle hämtas :(</SubHeader>
               ) : (
                 <>
+                  <Spacing Height={"5rem"} />
                   <SubHeader>Hämtar kursinformation</SubHeader>
                   <Spacing Height={"1rem"} />
                   <Loader color={Color.Blue} />
-                  <Spacing Height={"1rem"} />
+                  <Spacing Height={"4rem"} />
                 </>
               )}
             </>

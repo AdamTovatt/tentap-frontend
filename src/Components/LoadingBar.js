@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { keyframes } from "styled-components";
 import { Color, BorderRadius } from "./Constants";
 import Spacing from "./Spacing";
 
@@ -13,6 +14,25 @@ const LoadingBar = ({ width, completion, text, color }) => {
     </LoadingBarBackground>
   );
 };
+
+const animateShowFill = (width) => keyframes`
+  0%
+  {
+    width: 0;
+  }
+  40%
+  {
+    width: (width * 0.7) + "rem";
+  }
+  90%
+  {
+    width: (width * 0.8) + "rem";
+  }
+  100%
+  {
+    width: width + "rem";
+  }
+`;
 
 const LoadingBarBackground = styled.div`
   width: ${(props) => (props.width ? props.width + "rem" : "20rem")};
@@ -39,6 +59,7 @@ const LoadingBarFill = styled.div`
   background-color: ${(props) => (props.color ? props.color : Color.White)};
   border-radius: 0px;
   z-index: 1;
+  animation: ${(props) => animateShowFill(props.width)} 0.5s ease forwards;
 `;
 
 const Text = styled.div`

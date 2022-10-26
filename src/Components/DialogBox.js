@@ -30,7 +30,7 @@ const DialogBox = ({ text, setDialogText }) => {
   );
 };
 
-const rotate = keyframes`
+const scaleOnShow = keyframes`
   0%
   {
     transform: scale( 1, 0.1 );
@@ -68,7 +68,7 @@ const DialogBackground = styled.div`
   min-height: 5rem;
   max-width: 90vw;
   position: fixed;
-  animation: ${rotate} 0.2s ease forwards;
+  animation: ${scaleOnShow} 0.2s ease forwards;
 `;
 
 const FadedScreen = styled.div`

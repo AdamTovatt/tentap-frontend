@@ -5,6 +5,7 @@ import Spacing from "./Spacing";
 import ThickButton from "./ThickButton";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { PulseLoader as Loader } from "react-spinners";
+import { keyframes } from "styled-components";
 
 const CourseInfo = ({
   title,
@@ -53,9 +54,9 @@ const CourseInfo = ({
               </>
             ) : (
               <>
-                <Spacing Height={"1rem"} />
+                <Spacing Height={"2rem"} />
                 <Loader color={Color.Dark} />
-                <Spacing Height={"1.8rem"} />
+                <Spacing Height={"3rem"} />
               </>
             )}
           </>
@@ -75,7 +76,7 @@ function GetText(difficultyLevel) {
 }
 
 function GetCompletion(difficultyLevel) {
-  console.log(difficultyLevel.completed / difficultyLevel.total);
+  if (difficultyLevel.total === 0) return 0;
   return difficultyLevel.completed / difficultyLevel.total;
 }
 
