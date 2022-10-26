@@ -9,14 +9,37 @@ import CenterScreen from "../CenterScreen";
 import AdvancedSpacing from "../AdvancedSpacing";
 import Cookies from "universal-cookie";
 import { RemoveUserInfo } from "../../UserInfoHelper";
+import { useState } from "react";
+import DialogBox from "../DialogBox";
+import { useEffect } from "react";
+import { setCookie } from "../../Functions";
 
 const StartPage = () => {
+  const [dialogText, setDialogText] = useState(null);
+
   const cookies = new Cookies();
   const userInfo = cookies.get("userInfo");
+  const hasSeemDisclaimer = cookies.get("hasSeenDisclaimer");
   const isLoggedIn = userInfo !== undefined && userInfo != null;
+
+  useEffect(() => {
+    if (!hasSeemDisclaimer)
+      setDialogText(
+        "Hej, kul att du hittat hit! Den här sidan är långt ifrån klar och saknar många funktioner och mycket innehåll. Kom tillbaks senare eller använd den med det i åtanke!"
+      );
+  }, [hasSeemDisclaimer]);
 
   return (
     <CenterScreen>
+      {!dialogText ? null : (
+        <DialogBox
+          text={dialogText}
+          setDialogText={setDialogText}
+          onClose={() => {
+            setCookie("hasSeenDisclaimer", true);
+          }}
+        />
+      )}
       <StartPageMainContainer>
         <ComponentContainer>
           <StartPageHeader>Det borde inte vara dyrt att plugga</StartPageHeader>

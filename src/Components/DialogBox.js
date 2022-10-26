@@ -5,12 +5,14 @@ import { randomNumberInRange } from "../Functions";
 import { BorderRadius, Color } from "./Constants";
 import ThinButton from "./ThinButton";
 
-const DialogBox = ({ text, setDialogText }) => {
+const DialogBox = ({ text, setDialogText, onClose }) => {
   const okButtonsText = ["okejdå", "aja, okej", "okej", "jaha, ok"];
 
   return (
     <FadedScreen
       onClick={() => {
+        if (onClose) onClose();
+
         setDialogText(null);
       }}
     >
@@ -64,7 +66,7 @@ const ButtonsContainer = styled.div`
 const DialogBackground = styled.div`
   background-color: ${Color.Blue};
   border-radius: ${BorderRadius.Default};
-  min-width: 5rem;
+  min-width: 15rem;
   min-height: 5rem;
   max-width: 90vw;
   position: fixed;
