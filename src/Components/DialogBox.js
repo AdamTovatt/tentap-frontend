@@ -1,10 +1,13 @@
 import React from "react";
 import styled from "styled-components";
 import { keyframes } from "styled-components";
+import { randomNumberInRange } from "../Functions";
 import { BorderRadius, Color } from "./Constants";
 import ThinButton from "./ThinButton";
 
 const DialogBox = ({ text, setDialogText }) => {
+  const okButtonsText = ["okejdå", "aja, okej", "okej", "jaha, ok"];
+
   return (
     <FadedScreen
       onClick={() => {
@@ -19,7 +22,7 @@ const DialogBox = ({ text, setDialogText }) => {
             Color={Color.Green}
             TextColor={Color.Dark}
           >
-            okejdå
+            {okButtonsText[randomNumberInRange(0, okButtonsText.length - 1)]}
           </ThinButton>
         </ButtonsContainer>
       </DialogBackground>
