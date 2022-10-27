@@ -133,28 +133,24 @@ export async function GetExerciseById(exerciseId) {
   );
 }
 
-export async function GetNextExercise(id, easy, medium, hard) {
+export async function GetNextExercise(id, easy, medium, hard, excludeModules) {
   const cookies = new Cookies();
   const userInfo = cookies.get("userInfo");
 
-  return await fetch(
-    GetBasePath() +
-      "course/exercise/getNext?courseId=" +
-      id +
-      "&easy=" +
-      easy +
-      "&medium=" +
-      medium +
-      "&hard=" +
-      hard,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + userInfo?.token,
-      },
-    }
-  );
+  return await fetch(GetBasePath() + "course/exercise/next", {
+    method: "POST",
+    body: JSON.stringify({
+      courseId: id,
+      includeEasy: easy,
+      includeMedium: medium,
+      includeHard: hard,
+      excludeModules,
+    }),
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + userInfo?.token,
+    },
+  });
 }
 
 export async function GetCourseCompletionInfo(id) {
