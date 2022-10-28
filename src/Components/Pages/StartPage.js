@@ -25,7 +25,7 @@ const StartPage = () => {
   useEffect(() => {
     if (!hasSeemDisclaimer)
       setDialogText(
-        "Hej, kul att du hittat hit! Den här sidan är långt ifrån klar och saknar många funktioner och mycket innehåll. Det tar rätt lång tid att skriva allt, har hitills skrivit runt 6000 rader kod för sidan men det är många rader kvar 😩. Du får gärna använda den ändå men tänkte bara säga det, så du vet"
+        "Hej, kul att du hittat hit! Den här sidan är inte klar och saknar mycket funktioner och innehåll. Du får gärna använda den ändå men tänkte bara säga det, så du vet"
       );
   }, [hasSeemDisclaimer]);
 
