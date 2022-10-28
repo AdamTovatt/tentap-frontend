@@ -12,6 +12,7 @@ import AdminPage from "./Components/Pages/AdminPage";
 import CoursesPage from "./Components/Pages/CoursesPage";
 import CoursePage from "./Components/Pages/CoursePage";
 import ExercisePage from "./Components/Pages/ExercisePage";
+import TamapluggiPage from "./Components/Pages/TamapluggiPage";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -24,6 +25,7 @@ root.render(
       <Route path="/admin" element={<AdminPage />}></Route>
       <Route path="/courses" element={<CoursesPage />}></Route>
       <Route path="/course/:id" element={<CoursePage />}></Route>
+      <Route path="/tamapluggi" element={<TamapluggiPage />}></Route>
       <Route
         path="/course/:courseId/exercise/:exerciseId"
         element={<ExercisePage />}
