@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { BorderRadius, Color } from "../Constants";
 import { useEffect, useState } from "react";
+import { ReactComponent as Character2 } from "./Assets/pluggiCharacter_02.svg";
 
 const Character = ({ character }) => {
   const imagePath = getCharacterGraphicFromNumber(character ? character : 1);
@@ -58,10 +59,27 @@ function calculateXPosition(
 
 function getCharacterGraphicFromNumber(number) {
   if (number === 1) return "/tamaPluggi/pluggiCharacter_01.svg";
+  if (number === 2) return "/tamaPluggi/pluggiCharacter_02.svg";
 }
 
 const Text = styled.div`
   color: ${Color.Dark};
+`;
+
+const CharacterImageContainer = styled.div`
+  height: 40%;
+  max-height: 1rem;
+  object-fit: contain;
+  position: relative;
+  top: ${(props) =>
+    props.squashed
+      ? (10 - 0.5).toString() + "rem"
+      : (10 - 0).toString() + "rem"};
+  left: ${(props) => props.xPosition + "%"};
+  transform: scale(
+    ${(props) => (props.facingRight ? -1 : 1)},
+    ${(props) => (props.squashed ? 1.1 : 1)}
+  );
 `;
 
 const CharacterImage = styled.img`
