@@ -61,10 +61,6 @@ const MainContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
-
-  @media (min-width: 640px) {
-    text-align: center;
-  }
 `;
 
 export default TamapluggiPage;

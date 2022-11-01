@@ -3,10 +3,10 @@ import { BorderRadius, Color } from "../Constants";
 import { useEffect, useState } from "react";
 import { ReactComponent as Character2 } from "./Assets/pluggiCharacter_02.svg";
 
-const Character = ({ character }) => {
+const Character = ({ character, containerWidth }) => {
   const imagePath = getCharacterGraphicFromNumber(character ? character : 1);
   const [counter, setCounter] = useState(0);
-  const [xPosition, setXPositon] = useState(-30);
+  const [xPosition, setXPositon] = useState(5);
   const [facingRight, setFacingRight] = useState(false);
 
   useEffect(() => {
@@ -17,9 +17,10 @@ const Character = ({ character }) => {
         setXPositon,
         facingRight,
         setFacingRight,
-        counter
+        counter,
+        containerWidth
       );
-    }, 900);
+    }, 90);
     return () => {
       clearInterval(interval);
     };
@@ -42,17 +43,18 @@ function calculateXPosition(
   setXPositon,
   facingRight,
   setFacingRight,
-  counter
+  counter,
+  containerWidth
 ) {
-  if (xPosition <= -30) {
+  if (xPosition <= 0) {
     setFacingRight(true);
-  } else if (xPosition >= 30) {
+  } else if (xPosition >= containerWidth - 186) {
     setFacingRight(false);
   }
 
-  let xIncrease = 5;
+  let xIncrease = 28;
 
-  if (counter % 2 === 0) xIncrease = 2;
+  if (counter % 2 === 0) xIncrease = 5;
 
   setXPositon(xPosition + (facingRight ? xIncrease : -1 * xIncrease));
 }
@@ -75,7 +77,7 @@ const CharacterImageContainer = styled.div`
     props.squashed
       ? (10 - 0.5).toString() + "rem"
       : (10 - 0).toString() + "rem"};
-  left: ${(props) => props.xPosition + "%"};
+  left: ${(props) => props.xPosition + "px"};
   transform: scale(
     ${(props) => (props.facingRight ? -1 : 1)},
     ${(props) => (props.squashed ? 1.1 : 1)}
@@ -90,7 +92,7 @@ const CharacterImage = styled.img`
     props.squashed
       ? (10 - 0.5).toString() + "rem"
       : (10 - 0).toString() + "rem"};
-  left: ${(props) => props.xPosition + "%"};
+  left: ${(props) => props.xPosition + "px"};
   transform: scale(
     ${(props) => (props.facingRight ? -1 : 1)},
     ${(props) => (props.squashed ? 1.1 : 1)}
