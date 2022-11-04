@@ -133,6 +133,37 @@ export async function GetExerciseById(exerciseId) {
   );
 }
 
+export async function GetTamapluggiForUser() {
+  const cookies = new Cookies();
+  const userInfo = cookies.get("userInfo");
+
+  return await fetch(GetBasePath() + "tamapluggi/fromUser", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + userInfo?.token,
+    },
+  });
+}
+
+export async function CreateTamapluggi(name, studyGoal, breakDuration) {
+  const cookies = new Cookies();
+  const userInfo = cookies.get("userInfo");
+
+  return await fetch(GetBasePath() + "tamapluggi/createNew", {
+    method: "POST",
+    body: JSON.stringify({
+      name,
+      studyGoal,
+      breakDuration,
+    }),
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + userInfo?.token,
+    },
+  });
+}
+
 export async function GetNextExercise(id, easy, medium, hard, excludeModules) {
   const cookies = new Cookies();
   const userInfo = cookies.get("userInfo");

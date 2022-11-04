@@ -4,7 +4,7 @@ import ThickButton from "../ThickButton.js";
 import HorizontalLine from "../HorizontalLine";
 import ThinButton from "../ThinButton";
 import Spacing from "../Spacing";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CenterScreen from "../CenterScreen";
 import AdvancedSpacing from "../AdvancedSpacing";
 import Cookies from "universal-cookie";
@@ -14,15 +14,44 @@ import DialogBox from "../DialogBox";
 import { useEffect } from "react";
 import { setCookie } from "../../Functions";
 import TamapluggiScreen from "../Tamapluggi/TamapluggiScreen";
+import { GetTamapluggiForUser } from "../../Api";
+import TextField from "../TextField";
+import CreateTamapluggiForm from "../CreateTamapluggiForm";
+import { PulseLoader as Loader } from "react-spinners";
 
 const TamapluggiPage = () => {
   const [dialogText, setDialogText] = useState(null);
+  const [tamapluggi, setTamapluggi] = useState(null);
+  const [failed, setFailed] = useState(false);
+  const [fetchedTamapluggi, setFetchedTamapluggi] = useState(false);
 
   const cookies = new Cookies();
+  const navigate = useNavigate();
+
   const userInfo = cookies.get("userInfo");
   const isLoggedIn = userInfo !== undefined && userInfo != null;
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    async function FetchTamapluggi() {
+      let response = await GetTamapluggiForUser();
+      console.log(response);
+      if (response.status === 200) {
+        let json = await response.json();
+        console.log(json);
+        setTamapluggi(json);
+      } else setFailed(true);
+
+      setFetchedTamapluggi(true);
+    }
+
+    if (!isLoggedIn) {
+      navigate("/");
+    } else {
+      if (!fetchedTamapluggi) {
+        FetchTamapluggi();
+      }
+    }
+  }, [navigate, isLoggedIn, tamapluggi, failed, fetchedTamapluggi]);
 
   return (
     <CenterScreen>
@@ -36,13 +65,33 @@ const TamapluggiPage = () => {
         />
       )}
       <MainContainer>
-        <ComponentContainer>
-          <TamapluggiScreen></TamapluggiScreen>
-        </ComponentContainer>
+        {fetchedTamapluggi ? (
+          <>
+            {tamapluggi ? (
+              <ComponentContainer>
+                <TamapluggiScreen></TamapluggiScreen>
+              </ComponentContainer>
+            ) : (
+              <ComponentContainer>
+                <CreateTamapluggiForm
+                  tamapluggiWasCreated={() => {
+                    setFetchedTamapluggi(false);
+                  }}
+                />
+              </ComponentContainer>
+            )}
+          </>
+        ) : (
+          <ComponentContainer>
+            <Loader color={Color.Blue} />
+          </ComponentContainer>
+        )}
       </MainContainer>
     </CenterScreen>
   );
 };
+
+const CreateTamapluggiContainer = styled.div``;
 
 const ComponentContainer = styled.div`
   display: flex;

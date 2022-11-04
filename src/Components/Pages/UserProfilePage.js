@@ -62,6 +62,14 @@ const UserProfilePage = () => {
           ) : null}
         </ComponentContainer>
         <ComponentContainer>
+          <Link style={{ textDecoration: "none" }} to={"/tamapluggi"}>
+            <ThickButton>Tamapluggi</ThickButton>
+          </Link>
+          <AdvancedSpacing
+            MinHeight={0.5}
+            MaxHeight={4.6}
+            ScreenPercentage={2}
+          />
           {userRole > 0 ? (
             <>
               <Link style={{ textDecoration: "none" }} to={"/admin"}>

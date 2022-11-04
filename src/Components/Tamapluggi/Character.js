@@ -20,7 +20,7 @@ const Character = ({ character, containerWidth }) => {
         counter,
         containerWidth
       );
-    }, 90);
+    }, 900);
     return () => {
       clearInterval(interval);
     };

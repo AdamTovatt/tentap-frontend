@@ -10,7 +10,6 @@ const TamapluggiScreen = () => {
 
   useLayoutEffect(() => {
     setWidth(characterBox.current.offsetWidth);
-    console.log("he");
   }, []);
 
   return (
