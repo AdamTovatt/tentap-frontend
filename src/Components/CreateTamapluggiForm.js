@@ -112,7 +112,7 @@ async function HandleCreate(
     return;
   }
   let pause = parseInt(pauseDuration);
-  let goal = parseInt(pauseDuration);
+  let goal = parseInt(studyGoal);
 
   if (pause < 0 || goal < 0) {
     setDialogText(
