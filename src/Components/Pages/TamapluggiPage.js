@@ -18,6 +18,8 @@ import { GetTamapluggiForUser } from "../../Api";
 import TextField from "../TextField";
 import CreateTamapluggiForm from "../CreateTamapluggiForm";
 import { PulseLoader as Loader } from "react-spinners";
+import TamapluggiHeader from "../Tamapluggi/TamapluggiHeader";
+import TamapluggiFooter from "../Tamapluggi/TamapluggiFooter";
 
 const TamapluggiPage = () => {
   const [dialogText, setDialogText] = useState(null);
@@ -54,40 +56,44 @@ const TamapluggiPage = () => {
   }, [navigate, isLoggedIn, tamapluggi, failed, fetchedTamapluggi]);
 
   return (
-    <CenterScreen>
-      {!dialogText ? null : (
-        <DialogBox
-          text={dialogText}
-          setDialogText={setDialogText}
-          onClose={() => {
-            setCookie("hasSeenDisclaimer", true);
-          }}
-        />
-      )}
-      <MainContainer>
-        {fetchedTamapluggi ? (
-          <>
-            {tamapluggi ? (
-              <ComponentContainer>
-                <TamapluggiScreen></TamapluggiScreen>
-              </ComponentContainer>
-            ) : (
-              <ComponentContainer>
-                <CreateTamapluggiForm
-                  tamapluggiWasCreated={() => {
-                    setFetchedTamapluggi(false);
-                  }}
-                />
-              </ComponentContainer>
-            )}
-          </>
-        ) : (
-          <ComponentContainer>
-            <Loader color={Color.Blue} />
-          </ComponentContainer>
+    <>
+      <TamapluggiHeader></TamapluggiHeader>
+      <CenterScreen>
+        {!dialogText ? null : (
+          <DialogBox
+            text={dialogText}
+            setDialogText={setDialogText}
+            onClose={() => {
+              setCookie("hasSeenDisclaimer", true);
+            }}
+          />
         )}
-      </MainContainer>
-    </CenterScreen>
+        <MainContainer>
+          {fetchedTamapluggi ? (
+            <>
+              {tamapluggi ? (
+                <ComponentContainer>
+                  <TamapluggiScreen></TamapluggiScreen>
+                </ComponentContainer>
+              ) : (
+                <ComponentContainer>
+                  <CreateTamapluggiForm
+                    tamapluggiWasCreated={() => {
+                      setFetchedTamapluggi(false);
+                    }}
+                  />
+                </ComponentContainer>
+              )}
+            </>
+          ) : (
+            <ComponentContainer>
+              <Loader color={Color.Blue} />
+            </ComponentContainer>
+          )}
+        </MainContainer>
+      </CenterScreen>
+      <TamapluggiFooter></TamapluggiFooter>
+    </>
   );
 };
 

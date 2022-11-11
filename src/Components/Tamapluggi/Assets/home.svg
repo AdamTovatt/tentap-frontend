@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg fill="currentColor" stroke="currentColor" width="60mm" height="60mm" version="1.1" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+<g transform="translate(-72.328 -73.142)" stroke-dashoffset="34.016" stroke-linecap="round" stroke-linejoin="round">
+<rect x="85.411" y="104.61" width="33.654" height="18.799" ry="3.0214e-17" fill="none" stroke-width="5.5065" style="paint-order:stroke markers fill"/>
+<path transform="matrix(.36896 .1217 -.19018 .23611 44.436 -20.097)" d="m382.54 329.67-89.492 47.003 4.0402-101z" fill-rule="evenodd" stroke-width="18.898" style="paint-order:stroke markers fill"/>
+<rect x="101.13" y="113.12" width="3.2915" height="7.2002" ry="2.8105e-17" fill="none" stroke-width="5" style="paint-order:stroke markers fill"/>
+<rect x="111.14" y="111.64" width="1.3171" height="1.5228" ry="2.972e-17" fill="none" stroke-width="4.9172" style="paint-order:stroke markers fill"/>
+<rect x="92.584" y="111.47" width="1.3171" height="1.5228" ry="2.972e-17" fill="none" stroke-width="4.9172" style="paint-order:stroke markers fill"/>
+</g>
+</svg>

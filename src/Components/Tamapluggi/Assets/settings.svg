@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg fill="currentColor" stroke="currentColor" width="60mm" height="60mm" version="1.1" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+<g transform="matrix(1.2701 0 0 1.2701 -7.7829 -7.0704)" fill="none" stroke-dashoffset="34.016" stroke-linecap="round" stroke-linejoin="round">
+<ellipse cx="29.807" cy="29.664" rx="13.157" ry="13.157" stroke-width="5" style="paint-order:stroke markers fill"/>
+<rect x="29.214" y="10.745" width="2.0148" height="3.3579" ry="2.7756e-17" stroke-width="5" style="paint-order:stroke markers fill"/>
+<rect x="29.214" y="44.661" width="2.0148" height="3.3579" ry="2.7756e-17" stroke-width="5" style="paint-order:stroke markers fill"/>
+<rect transform="rotate(-90)" x="-30.893" y="45.668" width="2.0148" height="3.3579" ry="2.7756e-17" stroke-width="5" style="paint-order:stroke markers fill"/>
+<rect transform="rotate(-90)" x="-30.222" y="11.132" width="2.0148" height="3.3579" ry="2.7756e-17" stroke-width="5" style="paint-order:stroke markers fill"/>
+<rect transform="rotate(-46.96)" x="-1.8635" y="22.496" width="2.0148" height="3.3579" ry="2.7756e-17" stroke-width="5" style="paint-order:stroke markers fill"/>
+<rect transform="rotate(-46.96)" x="-2.7925" y="57.418" width="2.0148" height="3.3579" ry="2.7756e-17" stroke-width="5" style="paint-order:stroke markers fill"/>
+<rect transform="rotate(43.04)" x="40.028" y="17.202" width="2.0148" height="3.3579" ry="2.7756e-17" stroke-width="5" style="paint-order:stroke markers fill"/>
+<rect transform="rotate(43.04)" x="41.488" y="-17.701" width="2.0148" height="3.3579" ry="2.7756e-17" stroke-width="5" style="paint-order:stroke markers fill"/>
+</g>
+</svg>

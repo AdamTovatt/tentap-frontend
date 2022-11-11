@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg fill="currentColor" stroke="currentColor" width="60mm" height="60mm" version="1.1" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+<g>
+<path transform="scale(.26458)" d="m64.754 28.369a12.377 12.377 0 0 0-12.379 12.371v4.0605h-3.3066a12.377 12.377 0 0 0-12.373 12.379v5.957h-5.9648a12.377 12.377 0 0 0-12.371 12.373v108.97a12.377 12.377 0 0 0 12.371 12.373h134.42a12.377 12.377 0 0 0 12.381-12.373v-5.9648h5.957a12.377 12.377 0 0 0 12.379-12.371v-4.0606h3.3066a12.377 12.377 0 0 0 12.373-12.379v-108.96a12.377 12.377 0 0 0-12.373-12.371h-134.42zm11.777 18.373h113.06c2.0939 0 3.7812 1.6854 3.7812 3.7793v86.246c0 2.0939-1.6874 3.7793-3.7812 3.7793h-113.06c-2.0939 0-3.7793-1.6854-3.7793-3.7793v-86.246c0-2.0939 1.6854-3.7793 3.7793-3.7793z" fill-rule="evenodd" stroke-dashoffset="34.016" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.7795" style="-inkscape-stroke:none;paint-order:stroke markers fill"/>
+</g>
+<g transform="rotate(-90)">
+<path d="m-36.186 19.249h22.819c0.554 0 1 0.446 1 1v29.914c0 0.554-0.446 1-1 1h-22.819c-0.554 0-1-0.446-1-1v-29.914c0-0.554 0.446-1 1-1z" fill="none" stroke-dashoffset="34.016" stroke-linecap="round" stroke-linejoin="round" style="-inkscape-stroke:none;paint-order:stroke markers fill"/>
+</g>
+</svg>
