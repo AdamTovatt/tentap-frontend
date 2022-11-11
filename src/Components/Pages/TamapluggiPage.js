@@ -20,12 +20,14 @@ import CreateTamapluggiForm from "../CreateTamapluggiForm";
 import { PulseLoader as Loader } from "react-spinners";
 import TamapluggiHeader from "../Tamapluggi/TamapluggiHeader";
 import TamapluggiFooter from "../Tamapluggi/TamapluggiFooter";
+import SettingsScreen from "../Tamapluggi/SettingsScreen";
 
 const TamapluggiPage = () => {
   const [dialogText, setDialogText] = useState(null);
   const [tamapluggi, setTamapluggi] = useState(null);
   const [failed, setFailed] = useState(false);
   const [fetchedTamapluggi, setFetchedTamapluggi] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   const cookies = new Cookies();
   const navigate = useNavigate();
@@ -57,7 +59,11 @@ const TamapluggiPage = () => {
 
   return (
     <>
-      <TamapluggiHeader></TamapluggiHeader>
+      <TamapluggiHeader
+        settingsClicked={() => {
+          setSettingsOpen(true);
+        }}
+      ></TamapluggiHeader>
       <CenterScreen>
         {!dialogText ? null : (
           <DialogBox
@@ -69,27 +75,30 @@ const TamapluggiPage = () => {
           />
         )}
         <MainContainer>
-          {fetchedTamapluggi ? (
-            <>
-              {tamapluggi ? (
-                <ComponentContainer>
-                  <TamapluggiScreen></TamapluggiScreen>
-                </ComponentContainer>
-              ) : (
-                <ComponentContainer>
-                  <CreateTamapluggiForm
-                    tamapluggiWasCreated={() => {
-                      setFetchedTamapluggi(false);
-                    }}
-                  />
-                </ComponentContainer>
-              )}
-            </>
-          ) : (
-            <ComponentContainer>
-              <Loader color={Color.Blue} />
-            </ComponentContainer>
-          )}
+          <>
+            {fetchedTamapluggi ? (
+              <>
+                {tamapluggi ? (
+                  <ComponentContainer>
+                    <TamapluggiScreen></TamapluggiScreen>
+                  </ComponentContainer>
+                ) : (
+                  <ComponentContainer>
+                    <CreateTamapluggiForm
+                      tamapluggiWasCreated={() => {
+                        setFetchedTamapluggi(false);
+                      }}
+                    />
+                  </ComponentContainer>
+                )}
+              </>
+            ) : (
+              <ComponentContainer>
+                <Loader color={Color.Blue} />
+              </ComponentContainer>
+            )}
+          </>
+          {settingsOpen ? <SettingsScreen></SettingsScreen> : null}
         </MainContainer>
       </CenterScreen>
       <TamapluggiFooter></TamapluggiFooter>

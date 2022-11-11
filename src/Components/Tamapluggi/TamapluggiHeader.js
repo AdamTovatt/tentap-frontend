@@ -6,7 +6,7 @@ import { ReactComponent as SettingsIcon } from "./Assets/settings.svg";
 import { ReactComponent as TentaPIcon } from "./Assets/bookIcon3.svg";
 import { useNavigate } from "react-router-dom";
 
-const TamapluggiHeader = () => {
+const TamapluggiHeader = ({ settingsClicked }) => {
   const navigate = useNavigate();
 
   return (
@@ -30,6 +30,7 @@ const TamapluggiHeader = () => {
         <Filler></Filler>
         <Item>
           <SettingsIcon
+            onClick={settingsClicked}
             width={"3rem"}
             style={{
               color: Color.White,
