@@ -2,6 +2,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import { BorderRadius, Color } from "../Constants";
 import NumericInput from "../NumericInput";
+import Spacing from "../Spacing";
 import ThinButton from "../ThinButton";
 
 const SettingsScreen = ({ setOpen }) => {
@@ -10,7 +11,7 @@ const SettingsScreen = ({ setOpen }) => {
   return (
     <Background>
       <NumericInput
-        title={"Pluggtid:"}
+        title={"Pluggmål per dag:"}
         color={Color.White}
         textValueSuffix={" minuter"}
         changeInterval={30}
@@ -18,6 +19,20 @@ const SettingsScreen = ({ setOpen }) => {
         startValue={studyTime}
         setState={setStudyTime}
       ></NumericInput>
+      <Spacing Height={"1rem"}></Spacing>
+      <NumericInput
+        title={"Längd på paus:"}
+        color={Color.White}
+        textValueSuffix={" minuter"}
+        changeInterval={30}
+        minValue={0}
+        startValue={studyTime}
+        setState={setStudyTime}
+      ></NumericInput>
+      <Spacing Height={"1rem"}></Spacing>
+      <ThinButton Color={Color.Green} Width={16}>
+        Spara
+      </ThinButton>
       <CloseButton
         onClick={() => {
           if (setOpen) setOpen(false);
@@ -31,6 +46,7 @@ const SettingsScreen = ({ setOpen }) => {
 
 const Background = styled.div`
   display: flex;
+  flex-direction: column;
   background-color: ${Color.Blue};
   border-radius: ${BorderRadius.Default};
   position: absolute;
