@@ -98,7 +98,9 @@ const TamapluggiPage = () => {
               </ComponentContainer>
             )}
           </>
-          {settingsOpen ? <SettingsScreen></SettingsScreen> : null}
+          {settingsOpen ? (
+            <SettingsScreen setOpen={setSettingsOpen}></SettingsScreen>
+          ) : null}
         </MainContainer>
       </CenterScreen>
       <TamapluggiFooter></TamapluggiFooter>

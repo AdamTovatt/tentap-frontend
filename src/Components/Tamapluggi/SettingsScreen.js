@@ -1,17 +1,30 @@
+import { useState } from "react";
 import styled from "styled-components";
 import { BorderRadius, Color } from "../Constants";
 import NumericInput from "../NumericInput";
 import ThinButton from "../ThinButton";
 
-const SettingsScreen = () => {
+const SettingsScreen = ({ setOpen }) => {
+  const [studyTime, setStudyTime] = useState(90);
+
   return (
     <Background>
       <NumericInput
-        title={"Antal pluggtimmar:"}
+        title={"Pluggtid:"}
         color={Color.White}
-        placeHolder={"180 minuter"}
+        textValueSuffix={" minuter"}
+        changeInterval={30}
+        minValue={0}
+        startValue={studyTime}
+        setState={setStudyTime}
       ></NumericInput>
-      <CloseButton></CloseButton>
+      <CloseButton
+        onClick={() => {
+          if (setOpen) setOpen(false);
+        }}
+      >
+        X
+      </CloseButton>
     </Background>
   );
 };
@@ -25,13 +38,31 @@ const Background = styled.div`
 `;
 
 const CloseButton = styled.div`
-  min-width: 2rem;
-  min-height: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+  min-width: 2.5rem;
+  min-height: 2.5rem;
   position: absolute;
   right: -0.5rem;
   top: -0.5rem;
   background-color: ${Color.Red};
   border-radius: ${BorderRadius.Default};
+  color: ${Color.Dark};
+
+  cursor: pointer;
+
+  -webkit-box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+
+  &:hover {
+    -webkit-transform: scale(1.05);
+    -moz-transform: scale(1.05);
+    -o-transform: scale(1.05);
+    transform: scale(1.05);
+    transition-duration: 0.05s;
+  }
 `;
 
 export default SettingsScreen;
